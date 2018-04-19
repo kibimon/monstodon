@@ -1,30 +1,31 @@
-![Mastodon](https://i.imgur.com/NhZc40l.png)
-========
+MONSTODON
+=========
 
+<!--  Update these links/images once we have Travis up and running  -->
+
+<!--
 [![Build Status](https://img.shields.io/travis/tootsuite/mastodon.svg)][travis]
 [![Code Climate](https://img.shields.io/codeclimate/maintainability/tootsuite/mastodon.svg)][code_climate]
+-->
 
+<!--
 [travis]: https://travis-ci.org/tootsuite/mastodon
 [code_climate]: https://codeclimate.com/github/tootsuite/mastodon
+-->
 
-Mastodon is a **free, open-source social network server** based on **open web protocols** like ActivityPub and OStatus. The social focus of the project is a viable decentralized alternative to commercial social media silos that returns the control of the content distribution channels to the people. The technical focus of the project is a good user interface, a clean REST API for 3rd party apps and robust anti-abuse tools.
-
-Click on the screenshot below to watch a demo of the UI:
-
-[![Screenshot](https://i.imgur.com/pG3Nnz3.jpg)][youtube_demo]
-
-[youtube_demo]: https://www.youtube.com/watch?v=YO1jQ8_rAMU
+Monstodon is an implementation of [ActivityMon](https://gist.github.com/marrus-sh/b964a9c98cec9b8e306afe4834472732) on top of [Mastodon](https://github.com/tootsuite/mastodon).
+It is a **free, open-source social network server** based on **open web protocols** like ActivityPub and OStatus—only with support for cute monsters as well :3
 
 **Ruby on Rails** is used for the back-end, while **React.js** and Redux are used for the dynamic front-end. A static front-end for public resources (profiles and statuses) is also provided.
 
-If you would like, you can [support the development of this project on Patreon][patreon] or [Liberapay][liberapay]. Alternatively, you can donate to this BTC address: `17j2g7vpgHhLuXhN4bueZFCvdxxieyRVWd`
+If you would like, you can [support the development of this project on Patreon][patreon] or [Liberapay][liberapay]. 
 
-[patreon]: https://www.patreon.com/user?u=619786
-[liberapay]: https://liberapay.com/Mastodon/
+[patreon]: https://www.patreon.com/kibigo
+[liberapay]: https://liberapay.com/kibigo/
 
 ---
 
-## Resources
+## Mastodon Resources
 
 - [Frequently Asked Questions](https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/FAQ.md)
 - [Use this tool to find Twitter friends on Mastodon](https://bridge.joinmastodon.org)
@@ -33,7 +34,13 @@ If you would like, you can [support the development of this project on Patreon][
 - [List of apps](https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/Apps.md)
 - [List of sponsors](https://joinmastodon.org/sponsors)
 
-## Features
+## Monstodon Features
+
+**Support for cute, federated mon :3**
+
+Who doesn't want a cute mon or several on your ActivityPub profile???
+
+## Mastodon Features
 
 **No vendor lock-in: Fully interoperable with any conforming platform**
 
@@ -81,7 +88,7 @@ You can open issues for bugs you've found or features you think are missing. You
 
 ## License
 
-Copyright (C) 2016-2018 Eugen Rochko & other Mastodon contributors (see AUTHORS.md)
+Forked from Mastodon, copyright (C) 2016-2018 Eugen Rochko & other Mastodon contributors (see AUTHORS.md).
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
