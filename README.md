@@ -29,12 +29,6 @@ If you would like, you can [support the development of this project on Patreon][
 
 - [ActivityMon specification](https://kibimon.github.io/activitymon/)
 
-## Monstodon Features
-
-**Support for cute, federated mon :3**
-
-Who doesn't want a cute mon or several on your ActivityPub profile???
-
 ## Mastodon Resources
 
 - [Frequently Asked Questions](https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/FAQ.md)
@@ -43,6 +37,12 @@ Who doesn't want a cute mon or several on your ActivityPub profile???
 - [List of Mastodon instances](https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/List-of-Mastodon-instances.md)
 - [List of apps](https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/Apps.md)
 - [List of sponsors](https://joinmastodon.org/sponsors)
+
+## Monstodon Features
+
+**Support for cute, federated mon :3**
+
+Who doesn't want a cute mon or several on your ActivityPub profile???
 
 ## Mastodon Features
 
