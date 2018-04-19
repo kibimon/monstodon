@@ -13,7 +13,7 @@ MONSTODON
 [code_climate]: https://codeclimate.com/github/tootsuite/mastodon
 -->
 
-Monstodon is an implementation of [ActivityMon](https://gist.github.com/marrus-sh/b964a9c98cec9b8e306afe4834472732) on top of [Mastodon](https://github.com/tootsuite/mastodon).
+Monstodon is an implementation of [ActivityMon](https://kibimon.github.io/activitymon/) on top of [Mastodon](https://github.com/tootsuite/mastodon).
 It is a **free, open-source social network server** based on **open web protocols** like ActivityPub and OStatus—only with support for cute monsters as well :3
 
 **Ruby on Rails** is used for the back-end, while **React.js** and Redux are used for the dynamic front-end. A static front-end for public resources (profiles and statuses) is also provided.
@@ -25,6 +25,16 @@ If you would like, you can [support the development of this project on Patreon][
 
 ---
 
+## Monstodon Resources
+
+- [ActivityMon specification](https://kibimon.github.io/activitymon/)
+
+## Monstodon Features
+
+**Support for cute, federated mon :3**
+
+Who doesn't want a cute mon or several on your ActivityPub profile???
+
 ## Mastodon Resources
 
 - [Frequently Asked Questions](https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/FAQ.md)
@@ -33,12 +43,6 @@ If you would like, you can [support the development of this project on Patreon][
 - [List of Mastodon instances](https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/List-of-Mastodon-instances.md)
 - [List of apps](https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/Apps.md)
 - [List of sponsors](https://joinmastodon.org/sponsors)
-
-## Monstodon Features
-
-**Support for cute, federated mon :3**
-
-Who doesn't want a cute mon or several on your ActivityPub profile???
 
 ## Mastodon Features
 
