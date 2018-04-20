@@ -10,10 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_10_204633) do
+ActiveRecord::Schema.define(version: 2018_04_20_232618) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "account_domain_blocks", force: :cascade do |t|
@@ -81,6 +80,13 @@ ActiveRecord::Schema.define(version: 2018_04_10_204633) do
     t.index ["uri"], name: "index_accounts_on_uri"
     t.index ["url"], name: "index_accounts_on_url"
     t.index ["username", "domain"], name: "index_accounts_on_username_and_domain", unique: true
+  end
+
+  create_table "activitymon_species", force: :cascade do |t|
+    t.string "name"
+    t.string "uri"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "admin_action_logs", force: :cascade do |t|
