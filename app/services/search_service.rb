@@ -57,7 +57,9 @@ class SearchService < BaseService
   end
 
   def url_resource_symbol
-    url_resource.class.name.downcase.pluralize.to_sym
+    symbol = url_resource.class.name.downcase.pluralize.to_sym
+    symbol = :accounts if symbol == :"activitymon::trainers"
+    symbol
   end
 
   def full_text_searchable?

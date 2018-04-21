@@ -12,6 +12,24 @@ module RoutingHelper
     end
   end
 
+
+  %w[
+    url status_url stream_entry_url following_index_url
+    activity:status_url
+  ].each do |suffix|
+    if suffix.include? ":"
+      prefix, suffix = suffix.split ":"
+      name = "#{prefix}_activitymon_trainer_#{suffix}".to_sym
+      sym = "#{prefix}_account_#{suffix}".to_sym
+    else
+      name = "activitymon_trainer_#{suffix}".to_sym
+      sym = "account_#{suffix}".to_sym
+    end
+    define_method name do |*args|
+      send sym, *args
+    end
+  end
+
   def full_asset_url(source, **options)
     source = ActionController::Base.helpers.asset_url(source, options) unless use_storage?
 

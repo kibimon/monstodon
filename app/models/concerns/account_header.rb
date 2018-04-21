@@ -17,8 +17,9 @@ module AccountHeader
   end
 
   included do
+    attachment_path = "accounts/:attachment/:id_partition/:style/:filename"
     # Header upload
-    has_attached_file :header, styles: ->(f) { header_styles(f) }, convert_options: { all: '-strip' }, processors: [:lazy_thumbnail]
+    has_attached_file :header, path: attachment_path, styles: ->(f) { header_styles(f) }, convert_options: { all: '-strip' }, processors: [:lazy_thumbnail]
     validates_attachment_content_type :header, content_type: IMAGE_MIME_TYPES
     validates_attachment_size :header, less_than: LIMIT
     remotable_attachment :header, LIMIT
