@@ -45,6 +45,7 @@
 #  moved_to_account_id     :integer
 #  featured_collection_url :string
 #  fields                  :jsonb
+#  type                    :string           default("ActivityMon::Trainer")
 #
 
 class Account < ApplicationRecord
