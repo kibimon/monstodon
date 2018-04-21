@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_21_152459) do
+ActiveRecord::Schema.define(version: 2018_04_21_171359) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,8 +76,12 @@ ActiveRecord::Schema.define(version: 2018_04_21_152459) do
     t.string "featured_collection_url"
     t.jsonb "fields"
     t.string "type", default: "ActivityMon::Trainer"
+    t.bigint "owner_id"
+    t.bigint "species_id"
     t.index "(((setweight(to_tsvector('simple'::regconfig, (display_name)::text), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, (username)::text), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(domain, ''::character varying))::text), 'C'::\"char\")))", name: "search_index", using: :gin
     t.index "lower((username)::text), lower((domain)::text)", name: "index_accounts_on_username_and_domain_lower"
+    t.index ["owner_id"], name: "index_accounts_on_owner_id"
+    t.index ["species_id"], name: "index_accounts_on_species_id"
     t.index ["uri"], name: "index_accounts_on_uri"
     t.index ["url"], name: "index_accounts_on_url"
     t.index ["username", "domain"], name: "index_accounts_on_username_and_domain", unique: true

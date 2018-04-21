@@ -49,8 +49,7 @@
 #  species_id              :integer
 #
 
-class ActivityMon::Trainer < Account
-    has_many :mon, class_name: "ActivityMon::Mon", inverse_of: :owner
-
-    validates :owner_id, :species_id, absence: true
+class ActivityMon::Mon < Account
+    belongs_to :owner, class_name: 'ActivityMon::Trainer', optional: true
+    belongs_to :species, class_name: 'ActivityMon::Species', optional: true
 end

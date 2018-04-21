@@ -21,4 +21,5 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
 
   inflect.acronym 'ActivityMon'
   inflect.uncountable 'species'
+  inflect.uncountable 'mon'
 end

@@ -10,4 +10,5 @@
 #
 
 class ActivityMon::Species < ApplicationRecord
+    has_many :mon, class_name: "ActivityMon::Mon", inverse_of: :species
 end

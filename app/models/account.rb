@@ -46,6 +46,8 @@
 #  featured_collection_url :string
 #  fields                  :jsonb
 #  type                    :string           default("ActivityMon::Trainer")
+#  owner_id                :integer
+#  species_id              :integer
 #
 
 class Account < ApplicationRecord
