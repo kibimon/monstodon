@@ -179,6 +179,10 @@ Rails.application.routes.draw do
     end
 
     resources :account_moderation_notes, only: [:create, :destroy]
+
+    namespace :activitymon do
+      resources :species, only: [:index]
+    end
   end
 
   authenticate :user, lambda { |u| u.admin? } do

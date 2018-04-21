@@ -1,0 +1,14 @@
+- content_for :page_title do
+  = t('activitymon.admin.species.title')
+
+.table-wrapper
+  %table.table
+    %thead
+      %tr
+        %th= t('activitymon.admin.species.name')
+        %th= t('activitymon.admin.species.uri')
+        %th
+        %th
+    %tbody
+      = render partial: 'species', collection: @species
+  
