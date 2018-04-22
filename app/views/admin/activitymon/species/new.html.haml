@@ -1,0 +1,14 @@
+- content_for :page_title do
+  = t('activitymon.admin.species.new.title')
+
+= simple_form_for @species, url: { action: 'create' } do |f|
+  = render 'shared/error_messages', object: @species
+
+  %p
+    = f.label :name, label: t('activitymon.admin.species.new.name')
+    = f.input :name
+  %p
+    = f.label :uri, label: t('activitymon.admin.species.new.uri')
+    = f.input :uri
+  %p.actions
+    = f.button :button, t('activitymon.admin.species.new.create'), type: :submit

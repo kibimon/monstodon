@@ -181,7 +181,7 @@ Rails.application.routes.draw do
     resources :account_moderation_notes, only: [:create, :destroy]
 
     namespace :activitymon do
-      resources :species, only: [:index]
+      resources :species, only: [:index, :new, :create]
       resources :mon, only: [:index, :new, :create]
     end
   end
