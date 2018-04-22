@@ -40,6 +40,13 @@
     %ul
       %li= filter_link_to t('admin.accounts.order.alphabetic'), recent: nil
       %li= filter_link_to t('admin.accounts.order.most_recent'), recent: '1'
+  .filter-subset
+    %strong= t('activitymon.admin.accounts.type.title')
+    %ul
+      %li= filter_link_to t('activitymon.admin.accounts.type.all'), type: nil
+      %li= filter_link_to t('activitymon.admin.accounts.type.mon'), type: 'mon'
+      %li= filter_link_to t('activitymon.admin.accounts.type.route'), type: 'route'
+      %li= filter_link_to t('activitymon.admin.accounts.type.trainer'), type: 'trainer'
 
 = form_tag admin_accounts_url, method: 'GET', class: 'simple_form' do
   .fields-group
@@ -64,6 +71,6 @@
         %th
         %th
     %tbody
-      = render @accounts
+      = render partial: 'account', collection: @accounts
 
 = paginate @accounts

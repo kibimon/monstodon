@@ -56,11 +56,9 @@ class User < ApplicationRecord
 
   devise :omniauthable
 
-  belongs_to :account, inverse_of: :user
+  belongs_to :account, class_name: 'ActivityMon::Trainer', inverse_of: :user
   belongs_to :invite, counter_cache: :uses, optional: true
   accepts_nested_attributes_for :account
-
-  validate :account_must_not_be_a_mon
 
   has_many :applications, class_name: 'Doorkeeper::Application', as: :owner
   has_many :backups, inverse_of: :user
@@ -312,12 +310,6 @@ class User < ApplicationRecord
   end
 
   private
-
-  def account_must_not_be_a_mon
-    if account.is_a? ActivityMon::Mon
-      errors.add(:account, "cannot be an ActivityMon::Mon")
-    end
-  end
 
   def sanitize_languages
     filtered_languages.reject!(&:blank?)

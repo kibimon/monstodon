@@ -1,0 +1,20 @@
+---
+en:
+  activitymon:
+    admin:
+      accounts:
+        show: View accounts
+        type:
+          all: All
+          mon: Mon
+          route: Routes
+          title: Type
+          trainer: Trainers
+      mon:
+        create: Create Mon
+        nickname: Nickname
+        nickname_hint: Display Name
+        national_dex: National Dex №
+        national_dex_hint: Species
+        trainer_id: Trainer ID
+        trainer_id_hint: Owner

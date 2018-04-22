@@ -51,18 +51,25 @@
 #  trainer_id              :integer          not null
 #
 
-class ActivityMon::Mon < Account
-  belongs_to :owner, class_name: 'ActivityMon::Trainer', optional: true
-  belongs_to :species, class_name: 'ActivityMon::Species', optional: true
+class ActivityMon::Route < Account
+  validates :owner_id, :species_id, absence: true
 
   # Specific IDs
-  validates :mon_id, absence: true, on: :create
-  validates :route_no, numericality: { equal_to: 0 }
+  validates :route_no, absence: true, on: :create
+  validates :mon_id, numericality: { equal_to: 0 }
   validates :trainer_id, numericality: { equal_to: 0 }
 
   delegate :regional_dex, to: :species, prefix: false, allow_nil: true
   delegate :national_dex, to: :species, prefix: false, allow_nil: true
 
-  before_validation :not_a_route
+  before_validation :not_a_mon
   before_validation :not_a_trainer
+
+  def username=(ignored)
+    nil
+  end
+
+  def username
+    "route_#{route_no}"
+  end
 end

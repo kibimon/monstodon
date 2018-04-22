@@ -44,13 +44,36 @@
 #  moved_to_account_id     :integer
 #  featured_collection_url :string
 #  fields                  :jsonb
-#  type                    :string           default("ActivityMon::Trainer")
 #  owner_id                :integer
 #  species_id              :integer
+#  mon_id                  :integer          not null
+#  route_no                :integer          not null
+#  trainer_id              :integer          not null
 #
 
 class ActivityMon::Trainer < Account
-    has_many :mon, class_name: "ActivityMon::Mon", inverse_of: :owner
+  has_many :mon, class_name: 'ActivityMon::Mon', inverse_of: :owner
 
-    validates :owner_id, :species_id, absence: true
+  validates :owner_id, :species_id, absence: true
+
+  # Specific IDs
+  validates :trainer_id, absence: true, on: :create
+  validates :mon_id, numericality: { equal_to: 0 }
+  validates :route_no, numericality: { equal_to: 0 }
+
+  validates :username, presence: true
+
+  # Remote user validations
+  validates :username, uniqueness: { scope: :domain, case_sensitive: true }, if: -> { !local? && will_save_change_to_username? }
+
+  # Local user validations
+  validates :username, format: { with: /\A[a-z0-9_]+\z/i }, length: { maximum: 30 }, if: -> { local? && will_save_change_to_username? }
+  validates :username, format: { without: /\A(?:mon_|route_)/i }, if: -> { local? && will_save_change_to_username? }
+  validates_with UniqueUsernameValidator, if: -> { local? && will_save_change_to_username? }
+  validates_with UnreservedUsernameValidator, if: -> { local? && will_save_change_to_username? }
+  validates :display_name, length: { maximum: 30 }, if: -> { local? && will_save_change_to_display_name? }
+  validates :note, length: { maximum: 160 }, if: -> { local? && will_save_change_to_note? }
+
+  before_validation :not_a_mon
+  before_validation :not_a_route
 end

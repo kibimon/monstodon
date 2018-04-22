@@ -1,0 +1,13 @@
+- content_for :page_title do
+  = t('activitymon.admin.mon.create')
+
+= simple_form_for @mon, url: admin_activitymon_mon_index_path do |f|
+  = render 'shared/error_messages', object: @mon
+
+  .fields-group
+    = f.input :display_name, placeholder: t('activitymon.admin.mon.nickname'), hint: t('activitymon.admin.mon.nickname_hint')
+    = f.input :national_dex, placeholder: t('activitymon.admin.mon.national_dex'), hint: t('activitymon.admin.mon.national_dex_hint')
+    = f.input :owner_id, placeholder: t('activitymon.admin.mon.trainer_id'), hint: t('activitymon.admin.mon.trainer_id_hint')
+
+  .actions
+    = f.button :button, t('activitymon.admin.mon.create'), type: :submit

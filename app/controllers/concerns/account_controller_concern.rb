@@ -15,7 +15,7 @@ module AccountControllerConcern
   private
 
   def set_account
-    @account = ActivityMon::Trainer.find_local!(params[:account_username])
+    @account = Account.find_local!(params[:account_username])
   end
 
   def set_link_headers

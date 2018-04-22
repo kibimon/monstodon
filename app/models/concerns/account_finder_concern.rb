@@ -17,7 +17,46 @@ module AccountFinderConcern
     end
 
     def find_remote(username, domain)
+      return AccountByIdFinder.new(username[4..-1], :mon_id).account if domain.nil? && username.match?(/\Amon_/i)
+      return AccountByIdFinder.new(username[6..-1], :route_no).account if domain.nil? && username.match?(/\Aroute_/i)
       AccountFinder.new(username, domain).account
+    end
+  end
+
+  class AccountByIdFinder
+    attr_reader :the_id, :id_name
+
+    def initialize(the_id, id_name)
+      @the_id = the_id
+      @id_name = id_name
+    end
+
+    def account
+      scoped_accounts.order(id: :asc).take
+    end
+
+    private
+
+    def scoped_accounts
+      Account.unscoped.tap do |scope|
+        scope.merge! with_id
+        scope.merge! matching_id
+        scope.merge! matching_domain
+      end
+    end
+
+    def with_id
+      search = Hash.new
+      search[id_name] = 0
+      Account.where.not(search)
+    end
+
+    def matching_id
+      Account.where(Account.arel_table[id_name].eq the_id.to_i)
+    end
+
+    def matching_domain
+      Account.where(domain: nil)
     end
   end
 

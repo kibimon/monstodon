@@ -101,7 +101,8 @@ module Admin
         :display_name,
         :email,
         :ip,
-        :staff
+        :staff,
+        :type
       )
     end
   end

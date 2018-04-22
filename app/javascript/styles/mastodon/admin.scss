@@ -62,15 +62,42 @@
         a {
           border: 0;
           padding: 15px 35px;
+          border-radius: 0;
 
           &.selected {
             color: $primary-text-color;
             background-color: $ui-highlight-color;
             border-bottom: 0;
-            border-radius: 0;
 
             &:hover {
               background-color: lighten($ui-highlight-color, 5%);
+            }
+          }
+        }
+
+        ul {
+          background: lighten($ui-highlight-color, 10%);
+          border-radius: 0;
+
+          a {
+            color: $primary-text-color;
+            padding: 10px 35px 5px 55px;
+            border-radius: 0;
+
+            &:hover {
+              color: $primary-text-color;
+              background-color: lighten($ui-highlight-color, 15%);
+            }
+
+            &.selected {
+              color: $ui-base-color;
+              background-color: $primary-text-color;
+              border-bottom: 0;
+              border-radius: 0;
+
+              &:hover {
+                background-color: darken($primary-text-color, 5%);
+              }
             }
           }
         }

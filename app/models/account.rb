@@ -45,9 +45,11 @@
 #  moved_to_account_id     :integer
 #  featured_collection_url :string
 #  fields                  :jsonb
-#  type                    :string           default("ActivityMon::Trainer")
 #  owner_id                :integer
 #  species_id              :integer
+#  mon_id                  :integer          not null
+#  route_no                :integer          not null
+#  trainer_id              :integer          not null
 #
 
 class Account < ApplicationRecord
@@ -63,20 +65,10 @@ class Account < ApplicationRecord
 
   enum protocol: [:ostatus, :activitypub]
 
-  # Local users
+  validates_with TypedAccountValidator
+
+  # Local users (`ActivityMon::Trainer` only)
   has_one :user, inverse_of: :account
-
-  validates :username, presence: true
-
-  # Remote user validations
-  validates :username, uniqueness: { scope: :domain, case_sensitive: true }, if: -> { !local? && will_save_change_to_username? }
-
-  # Local user validations
-  validates :username, format: { with: /\A[a-z0-9_]+\z/i }, length: { maximum: 30 }, if: -> { local? && will_save_change_to_username? }
-  validates_with UniqueUsernameValidator, if: -> { local? && will_save_change_to_username? }
-  validates_with UnreservedUsernameValidator, if: -> { local? && will_save_change_to_username? }
-  validates :display_name, length: { maximum: 30 }, if: -> { local? && will_save_change_to_display_name? }
-  validates :note, length: { maximum: 160 }, if: -> { local? && will_save_change_to_note? }
 
   # Timelines
   has_many :stream_entries, inverse_of: :account, dependent: :destroy
@@ -127,6 +119,11 @@ class Account < ApplicationRecord
   scope :matches_display_name, ->(value) { where(arel_table[:display_name].matches("#{value}%")) }
   scope :matches_domain, ->(value) { where(arel_table[:domain].matches("%#{value}%")) }
 
+  # ActivityMon types
+  scope :mon_index, -> { where.not(mon_id: 0) }
+  scope :trainers, -> { where.not(trainer_id: 0) }
+  scope :routes, -> { where.not(route_number: 0) }
+
   delegate :email,
            :unconfirmed_email,
            :current_sign_in_ip,
@@ -142,12 +139,37 @@ class Account < ApplicationRecord
 
   delegate :filtered_languages, to: :user, prefix: false, allow_nil: true
 
+  self.ignored_columns = %w(type)
+
+  def username=(name)
+    return nil unless trainer?
+    super
+  end
+
+  def username
+    return "mon_#{mon_id}" if mon?
+    return "route_#{route_no}" if route?
+    super
+  end
+
   def local?
     domain.nil?
   end
 
   def moved?
     moved_to_account_id.present?
+  end
+
+  def mon?
+    mon_id != 0
+  end
+
+  def route?
+    route_no != 0
+  end
+
+  def trainer?
+    trainer_id != 0
   end
 
   def acct
@@ -291,6 +313,18 @@ class Account < ApplicationRecord
       DeliveryFailureTracker.filter(urls)
     end
 
+    def mon(mon_id)
+      Account.where({ mon_id: mon_id }).first
+    end
+
+    def route(route_no)
+      Account.where({ route_no: route_no }).first
+    end
+
+    def trainer(trainer_id)
+      Account.where({ trainer_id: trainer_id }).first
+    end
+
     def triadic_closures(account, limit: 5, offset: 0)
       sql = <<-SQL.squish
         WITH first_degree AS (
@@ -419,5 +453,17 @@ class Account < ApplicationRecord
     return if local?
 
     self.domain = TagManager.instance.normalize_domain(domain)
+  end
+
+  def not_a_mon
+    self.mon_id = 0
+  end
+
+  def not_a_route
+    self.route_no = 0
+  end
+
+  def not_a_trainer
+    self.trainer_id = 0
   end
 end

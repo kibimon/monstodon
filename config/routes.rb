@@ -182,6 +182,7 @@ Rails.application.routes.draw do
 
     namespace :activitymon do
       resources :species, only: [:index]
+      resources :mon, only: [:index, :new, :create]
     end
   end
 
