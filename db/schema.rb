@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_22_121415) do
+ActiveRecord::Schema.define(version: 2018_04_22_182622) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -97,6 +97,11 @@ ActiveRecord::Schema.define(version: 2018_04_22_121415) do
     t.string "uri"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.serial "regional_no", null: false
+    t.serial "national_no", null: false
+    t.index ["national_no"], name: "index_activitymon_species_on_national_no", unique: true, where: "(national_no <> 0)"
+    t.index ["regional_no"], name: "index_activitymon_species_on_regional_no", unique: true, where: "(regional_no <> 0)"
+    t.index ["uri"], name: "index_activitymon_species_on_uri", where: "(uri IS NOT NULL)"
   end
 
   create_table "admin_action_logs", force: :cascade do |t|
