@@ -314,15 +314,15 @@ class Account < ApplicationRecord
     end
 
     def mon(mon_id)
-      Account.where({ mon_id: mon_id }).first
+      Account.where(mon_id: mon_id).first
     end
 
     def route(route_no)
-      Account.where({ route_no: route_no }).first
+      Account.where(route_no: route_no).first
     end
 
     def trainer(trainer_id)
-      Account.where({ trainer_id: trainer_id }).first
+      Account.where(trainer_id: trainer_id).first
     end
 
     def triadic_closures(account, limit: 5, offset: 0)

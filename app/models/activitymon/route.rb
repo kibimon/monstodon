@@ -59,9 +59,6 @@ class ActivityMon::Route < Account
   validates :mon_id, numericality: { equal_to: 0 }
   validates :trainer_id, numericality: { equal_to: 0 }
 
-  delegate :regional_dex, to: :species, prefix: false, allow_nil: true
-  delegate :national_dex, to: :species, prefix: false, allow_nil: true
-
   before_validation :not_a_mon
   before_validation :not_a_trainer
 
