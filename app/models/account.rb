@@ -65,8 +65,6 @@ class Account < ApplicationRecord
 
   enum protocol: [:ostatus, :activitypub]
 
-  validates_with TypedAccountValidator
-
   # Local users (`ActivityMon::Trainer` only)
   has_one :user, inverse_of: :account
 
@@ -122,7 +120,7 @@ class Account < ApplicationRecord
   # ActivityMon types
   scope :mon_index, -> { where.not(mon_id: 0) }
   scope :trainers, -> { where.not(trainer_id: 0) }
-  scope :routes, -> { where.not(route_number: 0) }
+  scope :routes, -> { where.not(route_no: 0) }
 
   delegate :email,
            :unconfirmed_email,
@@ -139,19 +137,6 @@ class Account < ApplicationRecord
 
   delegate :filtered_languages, to: :user, prefix: false, allow_nil: true
 
-  self.ignored_columns = %w(type)
-
-  def username=(name)
-    return nil unless trainer?
-    super
-  end
-
-  def username
-    return "mon_#{mon_id}" if mon?
-    return "route_#{route_no}" if route?
-    super
-  end
-
   def local?
     domain.nil?
   end
@@ -161,15 +146,15 @@ class Account < ApplicationRecord
   end
 
   def mon?
-    mon_id != 0
+    false
   end
 
   def route?
-    route_no != 0
+    false
   end
 
   def trainer?
-    trainer_id != 0
+    false
   end
 
   def acct

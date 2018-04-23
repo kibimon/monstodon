@@ -65,4 +65,16 @@ class ActivityMon::Mon < Account
 
   before_validation :not_a_route
   before_validation :not_a_trainer
+
+  def mon?
+    true
+  end
+
+  def username=(ignored)
+    nil
+  end
+
+  def username
+    return "mon_#{mon_id}"
+  end
 end

@@ -76,4 +76,8 @@ class ActivityMon::Trainer < Account
 
   before_validation :not_a_mon
   before_validation :not_a_route
+
+  def trainer?
+    true
+  end
 end

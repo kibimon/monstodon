@@ -17,8 +17,10 @@ module AccountFinderConcern
     end
 
     def find_remote(username, domain)
-      return AccountByIdFinder.new(username[4..-1], :mon_id).account if domain.nil? && username.match?(/\Amon_/i)
-      return AccountByIdFinder.new(username[6..-1], :route_no).account if domain.nil? && username.match?(/\Aroute_/i)
+      if domain.nil? && username.present?
+        return AccountByIdFinder.new(username[4..-1], :mon_id).account if username.match?(/\Amon_/i)
+        return AccountByIdFinder.new(username[6..-1], :route_no).account if username.match?(/\Aroute_/i)
+      end
       AccountFinder.new(username, domain).account
     end
   end
