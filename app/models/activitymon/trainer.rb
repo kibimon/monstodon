@@ -52,6 +52,23 @@
 #
 
 class ActivityMon::Trainer < Account
+  # Local users stuff
+  delegate :email,
+           :unconfirmed_email,
+           :current_sign_in_ip,
+           :current_sign_in_at,
+           :confirmed?,
+           :admin?,
+           :moderator?,
+           :staff?,
+           :locale,
+           to: :user,
+           prefix: true,
+           allow_nil: true
+
+  delegate :filtered_languages, to: :user, prefix: false, allow_nil: true
+
+  # ActivityMon stuff
   has_many :mon, class_name: 'ActivityMon::Mon', inverse_of: :owner
 
   validates :owner_id, :species_id, absence: true

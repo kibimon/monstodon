@@ -65,8 +65,7 @@ class Account < ApplicationRecord
 
   enum protocol: [:ostatus, :activitypub]
 
-  # Local users (`ActivityMon::Trainer` only)
-  has_one :user, inverse_of: :account
+  has_one :user, inverse_of: :account  
 
   # Timelines
   has_many :stream_entries, inverse_of: :account, dependent: :destroy
@@ -121,21 +120,6 @@ class Account < ApplicationRecord
   scope :mon_index, -> { where.not(mon_id: 0) }
   scope :trainers, -> { where.not(trainer_id: 0) }
   scope :routes, -> { where.not(route_no: 0) }
-
-  delegate :email,
-           :unconfirmed_email,
-           :current_sign_in_ip,
-           :current_sign_in_at,
-           :confirmed?,
-           :admin?,
-           :moderator?,
-           :staff?,
-           :locale,
-           to: :user,
-           prefix: true,
-           allow_nil: true
-
-  delegate :filtered_languages, to: :user, prefix: false, allow_nil: true
 
   def local?
     domain.nil?
