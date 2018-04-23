@@ -83,7 +83,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/xenial64"
 
   config.vm.provider :virtualbox do |vb|
-    vb.name = "mastodon"
+    vb.name = "monstodon"
     vb.customize ["modifyvm", :id, "--memory", "2048"]
 
     # Disable VirtualBox DNS proxy to skip long-delay IPv6 resolutions.
@@ -97,10 +97,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   end
 
-  config.vm.hostname = "mastodon.dev"
+  # I changed the TLD to .test because Google owns .dev now
+  config.vm.hostname = "monstodon.test"
 
   # This uses the vagrant-hostsupdater plugin, and lets you
-  # access the development site at http://mastodon.dev.
+  # access the development site at http://monstodon.test.
   # To install:
   #   $ vagrant plugin install vagrant-hostsupdater
   if defined?(VagrantPlugins::HostsUpdater)

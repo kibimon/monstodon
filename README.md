@@ -18,7 +18,7 @@ It is a **free, open-source social network server** based on **open web protocol
 
 **Ruby on Rails** is used for the back-end, while **React.js** and Redux are used for the dynamic front-end. A static front-end for public resources (profiles and statuses) is also provided.
 
-If you would like, you can [support the development of this project on Patreon][patreon] or [Liberapay][liberapay]. 
+If you would like, you can [support the development of this project on Patreon][patreon] or [Liberapay][liberapay].
 
 [patreon]: https://www.patreon.com/kibigo
 [liberapay]: https://liberapay.com/kibigo/
@@ -79,6 +79,9 @@ You don't need to mess with dependencies and configuration if you want to try Ma
 ## Development
 
 Please follow the [development guide](https://github.com/tootsuite/documentation/blob/master/Running-Mastodon/Development-guide.md) from the documentation repository.
+
+If you are using Vagrant, note that the development URL has been changed to `monstodon.test`.
+The admin account is `admin@monstodon.test` and has the usual password of `mastodonadmin`.
 
 ## Deployment
 
