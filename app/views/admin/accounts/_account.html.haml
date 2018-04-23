@@ -2,17 +2,26 @@
   %td.username
     = account.username
   %td.domain
-    - unless account.local?
-      = link_to account.domain, admin_accounts_path(by_domain: account.domain)
-  %td
     - if account.local?
-      - if account.trainer?
+      = t('admin.accounts.location.local')
+    - else
+      = link_to account.domain, admin_accounts_path(by_domain: account.domain), title: account.protocol.humanize
+  %td
+    - if account.trainer?
+      - if account.local?
         - if account.user.nil?
-          = t("admin.accounts.moderation.suspended")
+          = t('admin.accounts.moderation.suspended')
         - else
           = t("admin.accounts.roles.#{account.user.role}")
-    - else
-      = account.protocol.humanize
+      - else
+        = t('activitymon.admin.accounts.roles.trainer')
+    - elsif account.mon?
+      - if account.owned?
+        = t('activitymon.admin.accounts.roles.owned')
+      - else
+        = t('activitymon.admin.accounts.roles.mon')
+    - elsif account.route?
+      = t('activitymon.admin.accounts.roles.route')
   %td
     = table_link_to 'circle', t('admin.accounts.web'), web_path("accounts/#{account.id}")
     = table_link_to 'globe', t('admin.accounts.public'), TagManager.instance.url_for(account)

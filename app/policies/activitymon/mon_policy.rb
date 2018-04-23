@@ -1,4 +1,4 @@
-class ActivityMon::MonPolicy < ApplicationPolicy
+class ActivityMon::MonPolicy < AccountPolicy
   def create?
     staff?
   end

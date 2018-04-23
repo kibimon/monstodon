@@ -1,8 +1,19 @@
 ---
 en:
   activitymon:
+    accounts:
+      roles:
+        owned: Mon (Owned)
+        mon: Mon
+        route: Route
+        trainer: Trainer
     admin:
       accounts:
+        roles:
+          owned: Mon (Owned)
+          mon: Mon
+          route: Route
+          trainer: Trainer
         show: View accounts
         type:
           all: All
@@ -12,9 +23,29 @@ en:
           trainer: Trainers
       mon:
         create: Create Mon
-        nickname: Nickname
-        nickname_hint: Display Name
-        national_dex: National Dex №
-        national_dex_hint: Species
-        trainer_id: Trainer ID
-        trainer_id_hint: Owner
+        display_name: Nickname
+        display_name_hint: Display Name
+        national_no: National №
+        national_no_hint: Species
+        regional_no: Regional №
+        owner_trainer_no: Trainer ID
+        owner_trainer_no_hint: Owner
+        owner_username: Trainer
+      route:
+        route_no: Route
+      species:
+        national_no: National №
+        regional_no: Regional №
+      trainer:
+        trainer_no: Trainer ID
+    mon:
+      national_no: National №
+      regional_no: Regional №
+      owner_username: Trainer
+    route:
+      route_no: Route
+    species:
+      national_no: National №
+      regional_no: Regional №
+    trainer:
+      trainer_id: Trainer ID

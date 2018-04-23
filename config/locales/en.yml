@@ -104,6 +104,7 @@ en:
       moderation_notes: Moderation notes
       most_recent_activity: Most recent activity
       most_recent_ip: Most recent IP
+      never_active: Never
       not_subscribed: Not subscribed
       order:
         alphabetic: Alphabetic
@@ -121,7 +122,7 @@ en:
       reset: Reset
       reset_password: Reset password
       resubscribe: Resubscribe
-      role: Permissions
+      role: Role
       roles:
         admin: Administrator
         moderator: Moderator

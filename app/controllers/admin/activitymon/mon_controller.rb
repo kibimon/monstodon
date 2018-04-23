@@ -10,15 +10,16 @@ class Admin::ActivityMon::MonController < Admin::BaseController
 
   def create
     authorize ActivityMon::Mon, :create?
-    @mon = ActivityMon::Mon.new(create_params)
-    if params[:trainer_id]
-      @mon.owner = Account.trainer(find_trainer_params)
+    required = params.require(:activitymon_mon)
+    @mon = ActivityMon::Mon.new(create_params(required))
+    if required.key?(:owner_trainer_no)
+      @mon.owner = Account.trainer(required.fetch(:owner_trainer_no))
     end
-    if params[:national_dex]
-      @mon.species = ActivityMon::Species.where(find_species_params).first
+    if required.key?(:national_no)
+      @mon.species = ActivityMon::Species.where(find_species_params(required)).first
     end
     if @mon.save
-      redirect_to account_path(username: "mon_#{@mon.mon_id}")
+      redirect_to action: 'new'
     else
       render :new
     end
@@ -26,15 +27,11 @@ class Admin::ActivityMon::MonController < Admin::BaseController
 
   private
 
-  def create_params
-    params.permit(:display_name)
+  def create_params(required)
+    required.permit(:display_name)
   end
 
-  def find_species_params
-    params.permit(:national_dex)
-  end
-
-  def find_trainer_params
-    params.permit(:trainer_id)
+  def find_species_params(required)
+    required.permit(:national_no)
   end
 end

@@ -9,7 +9,11 @@
         %td= @account.username
       %tr
         %th= t('admin.accounts.domain')
-        %td= @account.domain
+        %td
+          - if @account.local?
+            = t('admin.accounts.location.local')
+          - else
+            = @account.domain
       %tr
         %th= t('admin.accounts.display_name')
         %td= @account.display_name
@@ -22,48 +26,27 @@
           - if @account.local? && @account.avatar?
             = table_link_to 'trash', t('admin.accounts.remove_avatar'), remove_avatar_admin_account_path(@account.id), method: :post, data: { confirm: t('admin.accounts.are_you_sure') } if can?(:remove_avatar, @account)
 
-      - if @account.local?
-        %tr
-          %th= t('admin.accounts.role')
-          %td
-            - if @account.user.nil?
-              = t("admin.accounts.moderation.suspended")
+      %tr
+        %th= t('admin.accounts.role')
+        %td
+          - if @account.trainer?
+            - if @account.local?
+              - if @account.user.nil?
+                = t("admin.accounts.moderation.suspended")
+              - else
+                = t("admin.accounts.roles.#{@account.user&.role}")
+              = table_link_to 'angle-double-up', t('admin.accounts.promote'), promote_admin_account_role_path(@account.id), method: :post, data: { confirm: t('admin.accounts.are_you_sure') } if can?(:promote, @account.user)
+              = table_link_to 'angle-double-down', t('admin.accounts.demote'), demote_admin_account_role_path(@account.id), method: :post, data: { confirm: t('admin.accounts.are_you_sure') } if can?(:demote, @account.user)
             - else
-              = t("admin.accounts.roles.#{@account.user&.role}")
-            = table_link_to 'angle-double-up', t('admin.accounts.promote'), promote_admin_account_role_path(@account.id), method: :post, data: { confirm: t('admin.accounts.are_you_sure') } if can?(:promote, @account.user)
-            = table_link_to 'angle-double-down', t('admin.accounts.demote'), demote_admin_account_role_path(@account.id), method: :post, data: { confirm: t('admin.accounts.are_you_sure') } if can?(:demote, @account.user)
-        %tr
-          %th= t('admin.accounts.email')
-          %td
-            = @account.user_email
-            - if @account.user_confirmed?
-              = fa_icon('check')
-            = table_link_to 'edit', t('admin.accounts.change_email.label'), admin_account_change_email_path(@account.id) if can?(:change_email, @account.user)
-        - if @account.user_unconfirmed_email.present?
-          %th= t('admin.accounts.unconfirmed_email')
-          %td
-            = @account.user_unconfirmed_email
-        %tr
-          %th= t('admin.accounts.login_status')
-          %td
-            - if @account.user&.disabled?
-              = t('admin.accounts.disabled')
-              = table_link_to 'unlock', t('admin.accounts.enable'), enable_admin_account_path(@account.id), method: :post if can?(:enable, @account.user)
+              = t("activitymon.admin.accounts.roles.trainer")
+          - elsif @account.mon?
+            - if @account.owned?
+              = t('activitymon.admin.accounts.roles.owned')
             - else
-              = t('admin.accounts.enabled')
-              = table_link_to 'lock', t('admin.accounts.disable'), disable_admin_account_path(@account.id), method: :post if can?(:disable, @account.user)
-        %tr
-          %th= t('admin.accounts.most_recent_ip')
-          %td= @account.user_current_sign_in_ip
-        %tr
-          %th= t('admin.accounts.most_recent_activity')
-          %td
-            - if @account.user_current_sign_in_at
-              %time.formatted{ datetime: @account.user_current_sign_in_at.iso8601, title: l(@account.user_current_sign_in_at) }
-                = l @account.user_current_sign_in_at
-            - else
-              Never
-      - else
+              = t('activitymon.admin.accounts.roles.mon')
+          - elsif @account.route?
+            = t("activitymon.admin.accounts.roles.route")
+      - unless @account.local?
         %tr
           %th= t('admin.accounts.profile_url')
           %td= link_to @account.url, @account.url
@@ -71,6 +54,63 @@
           %th= t('admin.accounts.protocol')
           %td= @account.protocol.humanize
 
+      - if @account.trainer?
+        %tr
+          %th= t('activitymon.admin.trainer.trainer_no')
+          %td= @account.trainer_no
+        - if @account.local?
+          %tr
+            %th= t('admin.accounts.email')
+            %td
+              = @account.user_email
+              - if @account.user_confirmed?
+                = fa_icon('check')
+              = table_link_to 'edit', t('admin.accounts.change_email.label'), admin_account_change_email_path(@account.id) if can?(:change_email, @account.user)
+          - if @account.user_unconfirmed_email.present?
+            %th= t('admin.accounts.unconfirmed_email')
+            %td
+              = @account.user_unconfirmed_email
+          %tr
+            %th= t('admin.accounts.login_status')
+            %td
+              - if @account.user&.disabled?
+                = t('admin.accounts.disabled')
+                = table_link_to 'unlock', t('admin.accounts.enable'), enable_admin_account_path(@account.id), method: :post if can?(:enable, @account.user)
+              - else
+                = t('admin.accounts.enabled')
+                = table_link_to 'lock', t('admin.accounts.disable'), disable_admin_account_path(@account.id), method: :post if can?(:disable, @account.user)
+          %tr
+            %th= t('admin.accounts.most_recent_ip')
+            %td= @account.user_current_sign_in_ip
+          %tr
+            %th= t('admin.accounts.most_recent_activity')
+            %td
+              - if @account.user_current_sign_in_at
+                %time.formatted{ datetime: @account.user_current_sign_in_at.iso8601, title: l(@account.user_current_sign_in_at) }
+                  = l @account.user_current_sign_in_at
+              - else
+                = t('admin.accounts.never_active')
+      - elsif @account.mon?
+        - if @account.owned?
+          %tr
+            %th= t('activitymon.admin.mon.owner_username')
+            %td= link_to "@#{@account.owner_username}", admin_account_path(@account.owner_id)
+        - if @account.national_no
+          %tr
+            %th= t('activitymon.admin.mon.national_no')
+            %td= link_to @account.national_no
+        - if @account.regional_no
+          %tr
+            %th= t('activitymon.admin.mon.regional_no')
+            %td= @account.regional_no
+      - elsif @account.route?
+        - if @account.regional?
+          %tr
+            %th= t('activitymon.admin.route.route_regional_no')
+            %td= @account.route_regional_no
+        %tr
+          %th= t('activitymon.admin.route.route_national_no')
+          %td= @account.route_national_no
       %tr
         %th= t('admin.accounts.follows')
         %td= @account.following_count
@@ -110,7 +150,7 @@
     - else
       = link_to t('admin.accounts.silence'), admin_account_silence_path(@account.id), method: :post, class: 'button' if can?(:silence, @account)
 
-    - if @account.local?
+    - if @account.trainer? && @account.local?
       - unless @account.user_confirmed?
         = link_to t('admin.accounts.confirm'), admin_account_confirmation_path(@account.id), method: :post, class: 'button' if can?(:confirm, @account.user)
 

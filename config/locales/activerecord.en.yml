@@ -5,9 +5,6 @@ en:
       models:
         account:
           attributes:
-            base:
-              multiple: cannot have multiple types
-              none: must have a type
             username:
               invalid: only letters, numbers and underscores
         status:

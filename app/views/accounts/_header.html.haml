@@ -10,26 +10,64 @@
         %span>< @#{account.local_username_and_domain}
         = fa_icon('lock') if account.locked?
 
-    - if Setting.show_staff_badge
+    - if Setting.show_staff_badge and account.trainer?
       - if account.user_admin?
         .roles
           .account-role.admin
-            = t 'accounts.roles.admin'
+            = t('accounts.roles.admin')
       - elsif account.user_moderator?
         .roles
           .account-role.moderator
-            = t 'accounts.roles.moderator'
+            = t('accounts.roles.moderator')
+    - elsif account.mon?
+      - if account.owned?
+        .roles
+          .account-role.owned
+            = t('activitymon.accounts.roles.owned')
+      - else
+        .roles
+          .account-role.mon
+            = t('activitymon.accounts.roles.mon')
+    - elsif account.route?
+      .roles
+        .account-role.route
+          = t('activitymon.accounts.roles.route')
 
     .bio
       .account__header__content.p-note.emojify= Formatter.instance.simplified_format(account, custom_emojify: true)
 
-      - unless account.fields.empty?
-        %table.account__header__fields
-          %tbody
-            - account.fields.each do |field|
+      %table.account__header__fields
+        %tbody.activitymon__fields
+          - if account.trainer?
+            %tr
+              %th= t('activitymon.trainer.trainer_no')
+              %td= account.trainer_no
+          - elsif account.mon?
+            - if account.owned?
               %tr
-                %th.emojify= field.name
-                %td.emojify= Formatter.instance.format_field(account, field.value)
+                %th= t('activitymon.mon.owner_username')
+                %td= link_to "@#{@account.owner_username}", account_path(username: @account.owner_username)
+            - if account.national_no
+              %tr
+                %th= t('activitymon.mon.national_no')
+                %td= account.national_no
+            - if account.regional_no
+              %tr
+                %th= t('activitymon.mon.regional_no')
+                %td= account.regional_no
+          - elsif account.route?
+            - if account.regional?
+              %tr
+                %th= t('activitymon.route.route_regional_no')
+                %td= account.route_regional_no
+            %tr
+              %th= t('activitymon.route.route_national_no')
+              %td= account.route_national_no
+        %tbody
+          - account.fields.each do |field|
+            %tr
+              %th.emojify= field.name
+              %td.emojify= Formatter.instance.format_field(account, field.value)
 
     .details-counters
       .counter{ class: active_nav_class(short_account_url(account)) }
