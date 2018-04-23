@@ -80,7 +80,8 @@ You don't need to mess with dependencies and configuration if you want to try Ma
 
 Please follow the [development guide](https://github.com/tootsuite/documentation/blob/master/Running-Mastodon/Development-guide.md) from the documentation repository.
 
-If you are using Vagrant, note that the development URL has been changed to `monstodon.D`.
+If you are using Vagrant, note that the development URL has been changed to `monstodon.test`.
+The admin account is `admin@monstodon.test` and has the usual password of `mastodonadmin`.
 
 ## Deployment
 

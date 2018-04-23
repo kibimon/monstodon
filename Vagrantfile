@@ -97,11 +97,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   end
 
-  # I changed the TLD to .D because Google owns .dev now
-  config.vm.hostname = "monstodon.D"
+  # I changed the TLD to .test because Google owns .dev now
+  config.vm.hostname = "monstodon.test"
 
   # This uses the vagrant-hostsupdater plugin, and lets you
-  # access the development site at http://monstodon.D.
+  # access the development site at http://monstodon.test.
   # To install:
   #   $ vagrant plugin install vagrant-hostsupdater
   if defined?(VagrantPlugins::HostsUpdater)
