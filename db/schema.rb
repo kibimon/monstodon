@@ -102,8 +102,8 @@ ActiveRecord::Schema.define(version: 2018_04_23_061452) do
     t.datetime "updated_at", null: false
     t.serial "regional_no", null: false
     t.serial "national_no", null: false
-    t.index ["national_no"], name: "index_activitymon_species_on_national_no", unique: true, where: "(national_no IS NOT NULL)"
-    t.index ["regional_no"], name: "index_activitymon_species_on_regional_no", unique: true, where: "(regional_no IS NOT NULL)"
+    t.index ["national_no"], name: "index_activitymon_species_on_national_no", unique: true, where: "(national_no <> 0)"
+    t.index ["regional_no"], name: "index_activitymon_species_on_regional_no", unique: true, where: "(regional_no <> 0)"
     t.index ["uri"], name: "index_activitymon_species_on_uri", where: "(uri IS NOT NULL)"
   end
 

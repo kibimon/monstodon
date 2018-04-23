@@ -7,8 +7,8 @@ class AddSpeciesNos < ActiveRecord::Migration[5.2]
     add_column :activitymon_species, :national_no, :integer
 
     # Indexes nonzero columns
-    add_index :activitymon_species, :regional_no, where: "regional_no IS NOT NULL", unique: true, algorithm: :concurrently
-    add_index :activitymon_species, :national_no, where: "national_no IS NOT NULL", unique: true, algorithm: :concurrently
+    add_index :activitymon_species, :regional_no, where: "regional_no <> 0", unique: true, algorithm: :concurrently
+    add_index :activitymon_species, :national_no, where: "national_no <> 0", unique: true, algorithm: :concurrently
     add_index :activitymon_species, :uri, name: "index_activitymon_species_on_uri", where: "uri IS NOT NULL", unique: false, algorithm: :concurrently
 
     # Creates sequences and uses them as the defaults for the columns
