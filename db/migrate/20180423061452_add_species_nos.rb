@@ -1,4 +1,4 @@
-class AddColumnsToSpecies < ActiveRecord::Migration[5.2]
+class AddSpeciesNos < ActiveRecord::Migration[5.2]
   disable_ddl_transaction!
 
   def up
@@ -7,9 +7,9 @@ class AddColumnsToSpecies < ActiveRecord::Migration[5.2]
     add_column :activitymon_species, :national_no, :integer
 
     # Indexes nonzero columns
-    add_index :activitymon_species, :regional_no, where: "regional_no != 0", unique: true, algorithm: :concurrently
-    add_index :activitymon_species, :national_no, where: "national_no != 0", unique: true, algorithm: :concurrently
-    add_index :activitymon_species, :uri, name: "index_activitymon_species_on_uri", where: "uri is not null", unique: false, algorithm: :concurrently
+    add_index :activitymon_species, :regional_no, where: "regional_no IS NOT NULL", unique: true, algorithm: :concurrently
+    add_index :activitymon_species, :national_no, where: "national_no IS NOT NULL", unique: true, algorithm: :concurrently
+    add_index :activitymon_species, :uri, name: "index_activitymon_species_on_uri", where: "uri IS NOT NULL", unique: false, algorithm: :concurrently
 
     # Creates sequences and uses them as the defaults for the columns
     safety_assured {
@@ -24,7 +24,8 @@ class AddColumnsToSpecies < ActiveRecord::Migration[5.2]
     }
 
     # Backfills columns
-    ActivityMon::Species.in_batches.update_all(%q| uri = null, regional_no = nextval('activitymon_species_regional_no_seq'), national_no = nextval('activitymon_species_national_no_seq') |)
+    ActivityMon::Species.where(uri: nil).in_batches.update_all(%q|regional_no = nextval('activitymon_species_regional_no_seq'), national_no = nextval('activitymon_species_national_no_seq')|)
+    ActivityMon::Species.where.not(uri: nil).in_batches.update_all(%q|regional_no = 0, national_no = 0|)
 
     # Makes columns non-null
     change_column_null :activitymon_species, :regional_no, false
@@ -32,11 +33,13 @@ class AddColumnsToSpecies < ActiveRecord::Migration[5.2]
   end
 
   def down
+    # Removes indexs
+    remove_index :activitymon_species, :regional_no
+    remove_index :activitymon_species, :national_no
+    remove_index :activitymon_species, name: :index_activitymon_species_on_uri
+
     # Removes columns
     remove_column :activitymon_species, :regional_no
     remove_column :activitymon_species, :national_no
-
-    # Remove URI index
-    remove_index "index_activitymon_species_on_uri"
   end
 end

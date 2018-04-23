@@ -46,21 +46,27 @@
 #  fields                  :jsonb
 #  owner_id                :integer
 #  species_id              :integer
-#  mon_id                  :integer          not null
-#  route_no                :integer          not null
-#  trainer_id              :integer          not null
+#  type                    :string           default("ActivityMon::Trainer")
+#  mon_no                  :integer          not null
+#  route_regional_no       :integer          not null
+#  route_national_no       :integer          not null
+#  trainer_no              :integer          not null
 #
 
 class ActivityMon::Route < Account
   validates :owner_id, :species_id, absence: true
 
-  # Specific IDs
-  validates :route_no, absence: true, on: :create
-  validates :mon_id, numericality: { equal_to: 0 }
-  validates :trainer_id, numericality: { equal_to: 0 }
+  # Specific №s
+  validates :route_regional_no, uniqueness: true, allow_nil: true
+  validates :route_regional_no, presence: true, unless: :new_or_remote?
+  validates :route_national_no, uniqueness: true, allow_nil: true
+  validates :route_national_no, presence: true, unless: :new_record?
+  validates :mon_id, absence: true
+  validates :trainer_id, absence: true
 
-  before_validation :not_a_mon
-  before_validation :not_a_trainer
+  def regional?
+    local?
+  end
 
   def route?
     true
@@ -71,6 +77,30 @@ class ActivityMon::Route < Account
   end
 
   def username
-    "route_#{route_no}"
+    "Rt_#{route_national_no}N" unless regional?
+    "Rt_#{route_regional_no}"
+  end
+
+  before_save :not_a_mon!
+  before_save :not_a_trainer!
+  before_save :is_a_route!
+
+  private
+
+  def new_and_local?
+    new_record? && local?
+  end
+
+  def new_or_remote?
+    new_record? || !local?
+  end
+
+  def is_a_route!
+    if !local?
+      route_regional_no = 0
+    else
+      route_regional_no = nil if route_regional_no.nil?
+    end
+    route_national_no = nil if route_national_no.nil?
   end
 end

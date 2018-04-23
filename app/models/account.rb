@@ -47,9 +47,11 @@
 #  fields                  :jsonb
 #  owner_id                :integer
 #  species_id              :integer
-#  mon_id                  :integer          not null
-#  route_no                :integer          not null
-#  trainer_id              :integer          not null
+#  type                    :string           default("ActivityMon::Trainer")
+#  mon_no                  :integer          not null
+#  route_regional_no       :integer          not null
+#  route_national_no       :integer          not null
+#  trainer_no              :integer          not null
 #
 
 class Account < ApplicationRecord
@@ -65,7 +67,7 @@ class Account < ApplicationRecord
 
   enum protocol: [:ostatus, :activitypub]
 
-  has_one :user, inverse_of: :account  
+  has_one :user, inverse_of: :account
 
   # Timelines
   has_many :stream_entries, inverse_of: :account, dependent: :destroy
@@ -117,9 +119,26 @@ class Account < ApplicationRecord
   scope :matches_domain, ->(value) { where(arel_table[:domain].matches("%#{value}%")) }
 
   # ActivityMon types
-  scope :mon_index, -> { where.not(mon_id: 0) }
-  scope :trainers, -> { where.not(trainer_id: 0) }
-  scope :routes, -> { where.not(route_no: 0) }
+  scope :mon_index, -> { where.not(mon_no: nil) }
+  scope :regional_index, -> { where.not(route_regional_no: nil) }
+  scope :routes, -> { where.not(route_national_no: nil) }
+  scope :trainers, -> { where.not(trainer_no: nil) }
+
+  def mon_no
+    nillify_if_zero super
+  end
+
+  def route_regional_no
+    nillify_if_zero super
+  end
+
+  def route_national_no
+    nillify_if_zero super
+  end
+
+  def trainer_no
+    nillify_if_zero super
+  end
 
   def local?
     domain.nil?
@@ -282,16 +301,20 @@ class Account < ApplicationRecord
       DeliveryFailureTracker.filter(urls)
     end
 
-    def mon(mon_id)
-      Account.where(mon_id: mon_id).first
+    def mon(mon_no)
+      Account.where(mon_id: mon_no).first
     end
 
-    def route(route_no)
-      Account.where(route_no: route_no).first
+    def regional(route_regional_no)
+      Account.where(route_regional_no: route_regional_no).first
     end
 
-    def trainer(trainer_id)
-      Account.where(trainer_id: trainer_id).first
+    def route(route_national_no)
+      Account.where(route_national_no: route_national_no).first
+    end
+
+    def trainer(trainer_no)
+      Account.where(trainer_no: trainer_no).first
     end
 
     def triadic_closures(account, limit: 5, offset: 0)
@@ -424,15 +447,21 @@ class Account < ApplicationRecord
     self.domain = TagManager.instance.normalize_domain(domain)
   end
 
-  def not_a_mon
-    self.mon_id = 0
+  def nillify_if_zero(val)
+    return nil if val == 0
+    val
   end
 
-  def not_a_route
-    self.route_no = 0
+  def not_a_mon!
+    self.mon_no = 0
   end
 
-  def not_a_trainer
-    self.trainer_id = 0
+  def not_a_route!
+    self.route_regional_no = 0
+    self.route_national_no = 0
+  end
+
+  def not_a_trainer!
+    self.trainer_no = 0
   end
 end

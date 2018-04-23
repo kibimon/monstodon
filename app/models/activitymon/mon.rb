@@ -46,25 +46,35 @@
 #  fields                  :jsonb
 #  owner_id                :integer
 #  species_id              :integer
-#  mon_id                  :integer          not null
-#  route_no                :integer          not null
-#  trainer_id              :integer          not null
+#  type                    :string           default("ActivityMon::Trainer")
+#  mon_no                  :integer          not null
+#  route_regional_no       :integer          not null
+#  route_national_no       :integer          not null
+#  trainer_no              :integer          not null
 #
 
 class ActivityMon::Mon < Account
   belongs_to :owner, class_name: 'ActivityMon::Trainer', optional: true
   belongs_to :species, class_name: 'ActivityMon::Species', optional: true
 
-  # Specific IDs
-  validates :mon_id, absence: true, on: :create
-  validates :route_no, numericality: { equal_to: 0 }
-  validates :trainer_id, numericality: { equal_to: 0 }
+  # Specific №s
+  validates :mon_no, uniqueness: true, allow_nil: true
+  validates :mon_no, presence: true, unless: :new_record?
+  validates :route_regional_no, absence: true
+  validates :route_national_no, absence: true
+  validates :trainer_no, absence: true
 
-  delegate :regional_dex, to: :species, prefix: false, allow_nil: true
-  delegate :national_dex, to: :species, prefix: false, allow_nil: true
+  # Dex information
+  delegate :regional_no,
+    :national_no, to: :species, prefix: false, allow_nil: true
 
-  before_validation :not_a_route
-  before_validation :not_a_trainer
+  # Trainer information
+  delegate :username,
+    :trainer_no, to: :owner, prefix: true, allow_nil: true
+
+  def owned?
+    !owner.nil?
+  end
 
   def mon?
     true
@@ -75,6 +85,16 @@ class ActivityMon::Mon < Account
   end
 
   def username
-    return "mon_#{mon_id}"
+    return "mon_#{mon_no}"
+  end
+
+  before_save :not_a_route!
+  before_save :not_a_trainer!
+  before_save :is_a_mon!
+
+  private
+
+  def is_a_mon!
+    self.mon_no = nil if mon_no.nil?
   end
 end

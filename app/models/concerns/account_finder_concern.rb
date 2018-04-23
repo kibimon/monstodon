@@ -18,8 +18,13 @@ module AccountFinderConcern
 
     def find_remote(username, domain)
       if domain.nil? && username.present?
-        return AccountByIdFinder.new(username[4..-1], :mon_id).account if username.match?(/\Amon_/i)
-        return AccountByIdFinder.new(username[6..-1], :route_no).account if username.match?(/\Aroute_/i)
+        if username.match?(/\Amon_/i)
+          return AccountByIdFinder.new(username[4..-1], :mon_no).account
+        elsif username.match?(/\ARt_.*N\z/i)
+          return AccountByIdFinder.new(username[3..-2], :route_national_no).account
+        elsif username.match?(/\ARt_/i)
+          return AccountByIdFinder.new(username[3..-1], :route_regional_no).account
+        end
       end
       AccountFinder.new(username, domain).account
     end
@@ -48,13 +53,11 @@ module AccountFinderConcern
     end
 
     def with_id
-      search = Hash.new
-      search[id_name] = 0
-      Account.where.not(search)
+      Account.where.not(id_name => 0)
     end
 
     def matching_id
-      Account.where(Account.arel_table[id_name].eq the_id.to_i)
+      Account.where(id_name => the_id.to_i)
     end
 
     def matching_domain
