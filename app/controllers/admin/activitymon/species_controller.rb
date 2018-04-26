@@ -23,6 +23,6 @@ class Admin::ActivityMon::SpeciesController < Admin::BaseController
   private
 
   def resource_params
-    params.require(:activitymon_species).permit(:name, :uri)
+    params.require(:activitymon_species).permit(:name, :regional_no, :national_no)
   end
 end

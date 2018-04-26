@@ -6,9 +6,14 @@
     %thead
       %tr
         %th= t('activitymon.admin.species.name')
+        %th= t('activitymon.admin.species.regional_no')
+        %th= t('activitymon.admin.species.national_no')
         %th= t('activitymon.admin.species.uri')
         %th
         %th
     %tbody
       = render partial: 'species', collection: @species
+
+.actions
+  = link_to t('admin.accounts.species.new.title'), new_admin_activitymon_species_path, class: 'button'
   
