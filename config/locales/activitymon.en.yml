@@ -34,8 +34,12 @@ en:
       route:
         route_no: Route
       species:
+        create: Create Species
+        index: Species
+        name: Name
         national_no: National №
         regional_no: Regional №
+      section_title: ActivityMon
       trainer:
         trainer_no: Trainer ID
     mon:
@@ -45,6 +49,7 @@ en:
     route:
       route_no: Route
     species:
+      name: Name
       national_no: National №
       regional_no: Regional №
     trainer:
