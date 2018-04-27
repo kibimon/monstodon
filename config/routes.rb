@@ -120,6 +120,9 @@ Rails.application.routes.draw do
   resource :authorize_follow, only: [:show, :create]
   resource :share, only: [:show, :create]
 
+  # ActivityMon
+  resources :species, module: :activitymon, only: [:show], param: :national_no
+
   namespace :admin do
     resources :subscriptions, only: [:index]
     resources :domain_blocks, only: [:index, :new, :create, :show, :destroy]
