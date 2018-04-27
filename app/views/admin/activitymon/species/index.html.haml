@@ -1,5 +1,5 @@
 - content_for :page_title do
-  = t('activitymon.admin.species.title')
+  = t('activitymon.admin.species.index')
 
 .table-wrapper
   %table.table
@@ -15,5 +15,5 @@
       = render partial: 'species', collection: @species
 
 .actions
-  = link_to t('admin.accounts.species.new.title'), new_admin_activitymon_species_path, class: 'button'
+  = link_to t('admin.accounts.species.create'), new_admin_activitymon_species_path, class: 'button'
   

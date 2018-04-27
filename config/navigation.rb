@@ -36,7 +36,7 @@ SimpleNavigation::Configuration.run do |navigation|
     end
 
     primary.item :activitymon, t('activitymon.admin.section_title'), admin_activitymon_species_index_url, if: proc { current_user.staff? } do |activitymon|
-      activitymon.item :species, t('activitymon.admin.species.index.title'), admin_activitymon_species_index_url, highlights_on: %r{/admin/activitymon/species}
+      activitymon.item :species, t('activitymon.admin.species.index'), admin_activitymon_species_index_url, highlights_on: %r{/admin/activitymon/species}
     end
 
     primary.item :admin, safe_join([fa_icon('cogs fw'), t('admin.title')]), proc { current_user.admin? ? edit_admin_settings_url : admin_custom_emojis_url }, if: proc { current_user.staff? } do |admin|

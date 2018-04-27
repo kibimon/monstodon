@@ -1,5 +1,5 @@
 - content_for :page_title do
-  = t('activitymon.admin.species.new.title')
+  = t('activitymon.admin.species.create')
 
 = simple_form_for @species, url: { action: 'create' } do |f|
   = render 'shared/error_messages', object: @species
