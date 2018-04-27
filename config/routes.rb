@@ -121,7 +121,7 @@ Rails.application.routes.draw do
   resource :share, only: [:show, :create]
 
   # ActivityMon
-  resources :species, module: :activitymon, only: [:show], param: :national_no
+  resources :species, module: :activitymon, only: [:show], path: "Species", param: :national_no
 
   namespace :admin do
     resources :subscriptions, only: [:index]
