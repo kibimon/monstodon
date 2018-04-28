@@ -26,6 +26,10 @@ class ActivityPub::Adapter < ActiveModelSerializers::Adapter::Base
     ],
   }.freeze
 
+  def context
+    CONTEXT
+  end
+
   def self.default_key_transform
     :camel_lower
   end
@@ -37,6 +41,6 @@ class ActivityPub::Adapter < ActiveModelSerializers::Adapter::Base
   def serializable_hash(options = nil)
     options = serialization_options(options)
     serialized_hash = ActiveModelSerializers::Adapter::Attributes.new(serializer, instance_options).serializable_hash(options)
-    CONTEXT.merge(self.class.transform_key_casing!(serialized_hash, instance_options))
+    context.merge(self.class.transform_key_casing!(serialized_hash, instance_options))
   end
 end
