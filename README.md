@@ -13,8 +13,8 @@ MONSTODON
 [code_climate]: https://codeclimate.com/github/tootsuite/mastodon
 -->
 
-Monstodon is an implementation of [ActivityMon](https://kibimon.github.io/activitymon/) on top of [Mastodon](https://github.com/tootsuite/mastodon).
-It is a **free, open-source social network server** based on **open web protocols** like ActivityPub and OStatus—only with support for cute monsters as well :3
+Monstodon is an implementation of [MonStrPub](http://monstr.pub/) on top of [Mastodon](https://github.com/tootsuite/mastodon).
+It is a **free, open-source social network server** based on **open web protocols** like ActivityPub—only with support for cute monsters as well :3
 
 **Ruby on Rails** is used for the back-end, while **React.js** and Redux are used for the dynamic front-end. A static front-end for public resources (profiles and statuses) is also provided.
 
@@ -23,11 +23,14 @@ If you would like, you can [support the development of this project on Patreon][
 [patreon]: https://www.patreon.com/kibigo
 [liberapay]: https://liberapay.com/kibigo/
 
+ >  Monstodon is a very new project, currently under active development and not yet ready for deployment on production servers.
+ >  Hang in there!
+
 ---
 
 ## Monstodon Resources
 
-- [ActivityMon specification](https://kibimon.github.io/activitymon/)
+- [MonStrPub specification](http://monstr.pub/spec/monstrpub-overview/)
 
 ## Mastodon Resources
 
