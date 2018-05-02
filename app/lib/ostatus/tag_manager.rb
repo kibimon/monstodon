@@ -64,7 +64,7 @@ class OStatus::TagManager
     return target.uri if target.respond_to?(:local?) && !target.local?
 
     case target.object_type
-    when :person
+    when :mon, :route, :trainer
       account_url(target)
     when :note, :comment, :activity
       target.uri || unique_tag(target.created_at, target.id, 'Status')

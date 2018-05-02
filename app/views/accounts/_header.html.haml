@@ -46,7 +46,7 @@
             - if account.owned?
               %tr
                 %th= t('activitymon.mon.owner_username')
-                %td= link_to "@#{@account.owner_username}", account_path(username: @account.owner_username)
+                %td= link_to "@#{@account.owner_username}", TagManager.instance.url_for(@account.owner)
             - if account.national_no
               %tr
                 %th= t('activitymon.mon.national_no')

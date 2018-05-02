@@ -4,38 +4,29 @@ module AccountFinderConcern
   extend ActiveSupport::Concern
 
   class_methods do
-    def find_local!(username)
-      find_local(username) || raise(ActiveRecord::RecordNotFound)
+    def find_no!(no_name, numero)
+      find_no(no_name, numero) || raise(ActiveRecord::RecordNotFound)
     end
 
-    def find_remote!(username, domain)
-      find_remote(username, domain) || raise(ActiveRecord::RecordNotFound)
+    def find_by_username!(username, domain = nil)
+      find_by_username(username, domain) || raise(ActiveRecord::RecordNotFound)
     end
 
-    def find_local(username)
-      find_remote(username, nil)
+    def find_no(no_name, numero)
+      AccountNoFinder.new(no_name, numero).account
     end
 
-    def find_remote(username, domain)
-      if domain.nil? && username.present?
-        if username.match?(/\Amon_/i)
-          return AccountByIdFinder.new(username[4..-1], :mon_no).account
-        elsif username.match?(/\ARt_.*N\z/i)
-          return AccountByIdFinder.new(username[3..-2], :route_national_no).account
-        elsif username.match?(/\ARt_/i)
-          return AccountByIdFinder.new(username[3..-1], :route_regional_no).account
-        end
-      end
-      AccountFinder.new(username, domain).account
+    def find_by_username(username, domain = nil)
+      AccountByUsernameFinder.new(username, domain).account
     end
   end
 
-  class AccountByIdFinder
-    attr_reader :the_id, :id_name
+  class AccountNoFinder
+    attr_reader :no_name, :numero
 
-    def initialize(the_id, id_name)
-      @the_id = the_id
-      @id_name = id_name
+    def initialize(no_name, numero)
+      @no_name = no_name
+      @numero = numero
     end
 
     def account
@@ -46,26 +37,21 @@ module AccountFinderConcern
 
     def scoped_accounts
       Account.unscoped.tap do |scope|
-        scope.merge! with_id
-        scope.merge! matching_id
-        scope.merge! matching_domain
+        scope.merge! with_no
+        scope.merge! matching_no
       end
     end
 
-    def with_id
-      Account.where.not(id_name => 0)
+    def with_no
+      Account.where.not(no_name => 0)
     end
 
-    def matching_id
-      Account.where(id_name => the_id.to_i)
-    end
-
-    def matching_domain
-      Account.where(domain: nil)
+    def matching_no
+      Account.where(no_name => numero.to_i)
     end
   end
 
-  class AccountFinder
+  class AccountByUsernameFinder
     attr_reader :username, :domain
 
     def initialize(username, domain)

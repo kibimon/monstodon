@@ -23,16 +23,16 @@ class FollowerAccountsController < ApplicationController
   private
 
   def page_url(page)
-    account_followers_url(@account, page: page) unless page.nil?
+    TagManager.instance.followers_url_for(@account, page: page) unless page.nil?
   end
 
   def collection_presenter
     page = ActivityPub::CollectionPresenter.new(
-      id: account_followers_url(@account, page: params.fetch(:page, 1)),
+      id: ActivityPub::TagManager.instance.followers_uri_for(@account, page: params.fetch(:page, 1)),
       type: :ordered,
       size: @account.followers_count,
       items: @follows.map { |f| ActivityPub::TagManager.instance.uri_for(f.account) },
-      part_of: account_followers_url(@account),
+      part_of: ActivityPub::TagManager.instance.followers_uri_for(@account),
       next: page_url(@follows.next_page),
       prev: page_url(@follows.prev_page)
     )
@@ -40,7 +40,7 @@ class FollowerAccountsController < ApplicationController
       page
     else
       ActivityPub::CollectionPresenter.new(
-        id: account_followers_url(@account),
+        id: ActivityPub::TagManager.instance.followers_uri_for(@account),
         type: :ordered,
         size: @account.followers_count,
         first: page

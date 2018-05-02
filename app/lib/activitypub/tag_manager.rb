@@ -12,36 +12,54 @@ class ActivityPub::TagManager
     public: 'https://www.w3.org/ns/activitystreams#Public',
   }.freeze
 
-  def url_for(target)
-    return target.url if target.respond_to?(:local?) && !target.local?
-
-    case target.object_type
-    when :person
-      short_account_url(target)
-    when :note, :comment, :activity
-      return activity_account_status_url(target.account, target) if target.reblog?
-      short_account_status_url(target.account, target)
-    end
-  end
-
-  def uri_for(target)
+  def uri_for(target, *more)
     return target.uri if target.respond_to?(:local?) && !target.local?
 
     case target.object_type
-    when :person
-      account_url(target)
+    when :mon, :route, :trainer
+      account_url(target, *more)
     when :note, :comment, :activity
-      return activity_account_status_url(target.account, target) if target.reblog?
-      account_status_url(target.account, target)
+      return activity_account_status_url(target.account, target, *more) if target.reblog?
+      account_status_url(target.account, target, *more)
     when :emoji
-      emoji_url(target)
+      emoji_url(target, *more)
     end
   end
 
-  def activity_uri_for(target)
+  def activity_uri_for(target, *more)
     raise ArgumentError, 'target must be a local activity' unless %i(note comment activity).include?(target.object_type) && target.local?
 
-    activity_account_status_url(target.account, target)
+    activity_account_status_url(target.account, target, *more)
+  end
+
+  def collection_uri_for(target, *more)
+    raise ArgumentError, 'target must be a local actor' unless %i(mon route trainer).include?(target.object_type) && target.local?
+
+    account_collection_url(target, *more)
+  end
+
+  def outbox_uri_for(target, *more)
+    raise ArgumentError, 'target must be a local actor' unless %i(mon route trainer).include?(target.object_type) && target.local?
+
+    account_outbox_url(target, *more)
+  end
+
+  def inbox_uri_for(target, *more)
+    raise ArgumentError, 'target must be a local actor' unless %i(mon route trainer).include?(target.object_type) && target.local?
+
+    account_inbox_url(target, *more)
+  end
+
+  def followers_uri_for(target, *more)
+    raise ArgumentError, 'target must be a local actor' unless %i(mon route trainer).include?(target.object_type) && target.local?
+
+    account_followers_url(target, *more)
+  end
+
+  def following_uri_for(target, *more)
+    raise ArgumentError, 'target must be a local actor' unless %i(mon route trainer).include?(target.object_type) && target.local?
+
+    account_following_index_url(target, *more)
   end
 
   # Primary audience of a status
@@ -98,7 +116,7 @@ class ActivityPub::TagManager
     if local_uri?(uri)
       case klass.name
       when 'Account'
-        klass.find_local(uri_to_local_id(uri, :username))
+        klass.find_by_username(uri_to_local_id(uri, :username))
       else
         StatusFinder.new(uri).status
       end

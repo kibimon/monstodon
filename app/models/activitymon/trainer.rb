@@ -51,6 +51,7 @@
 #  route_regional_no       :integer          not null
 #  route_national_no       :integer          not null
 #  trainer_no              :integer          not null
+#  routing_version         :integer          default(2), not null
 #
 
 class ActivityMon::Trainer < Account
@@ -97,6 +98,15 @@ class ActivityMon::Trainer < Account
     true
   end
 
+  def object_type
+    :trainer
+  end
+
+  def to_param
+    return username if routing_version == 1
+    "#{trainer_no.to_s.rjust(5, '0')}"
+  end
+
   before_save :not_a_mon!
   before_save :not_a_route!
   before_save :is_a_trainer!
@@ -104,6 +114,10 @@ class ActivityMon::Trainer < Account
   private
 
   def is_a_trainer!
-    trainer_no = nil if trainer_no.nil?
+    if local?
+      self.trainer_no = nil if trainer_no.nil?
+    else
+      self.trainer_no = 0
+    end
   end
 end

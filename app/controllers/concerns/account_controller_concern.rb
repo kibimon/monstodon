@@ -2,21 +2,16 @@
 
 module AccountControllerConcern
   extend ActiveSupport::Concern
+  include AccountAccessConcern
 
   FOLLOW_PER_PAGE = 12
 
   included do
     layout 'public'
-    before_action :set_account
     before_action :set_link_headers
-    before_action :check_account_suspension
   end
 
   private
-
-  def set_account
-    @account = Account.find_local!(params[:account_username])
-  end
 
   def set_link_headers
     response.headers['Link'] = LinkHeader.new(
@@ -37,7 +32,7 @@ module AccountControllerConcern
 
   def atom_account_url_link
     [
-      account_url(@account, format: 'atom'),
+      OStatus::TagManager.instance.uri_for(@account),
       [%w(rel alternate), %w(type application/atom+xml)],
     ]
   end
@@ -51,9 +46,5 @@ module AccountControllerConcern
 
   def webfinger_account_url
     webfinger_url(resource: @account.to_webfinger_s)
-  end
-
-  def check_account_suspension
-    gone if @account.suspended?
   end
 end

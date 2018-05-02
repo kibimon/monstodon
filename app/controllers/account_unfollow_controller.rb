@@ -7,6 +7,6 @@ class AccountUnfollowController < ApplicationController
 
   def create
     UnfollowService.new.call(current_user.account, @account)
-    redirect_to account_path(@account)
+    redirect_to TagManager.instance.path_for(@account)
   end
 end

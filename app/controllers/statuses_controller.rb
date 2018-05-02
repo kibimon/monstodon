@@ -3,15 +3,14 @@
 class StatusesController < ApplicationController
   include SignatureAuthentication
   include Authorization
+  include AccountAccessConcern
 
   ANCESTORS_LIMIT = 20
 
   layout 'public'
 
-  before_action :set_account
   before_action :set_status
   before_action :set_link_headers
-  before_action :check_account_suspension
   before_action :redirect_to_original, only: [:show]
   before_action :set_referrer_policy_header, only: [:show]
   before_action :set_cache_headers
@@ -51,14 +50,10 @@ class StatusesController < ApplicationController
 
   private
 
-  def set_account
-    @account = Account.find_local!(params[:account_username])
-  end
-
   def set_link_headers
     response.headers['Link'] = LinkHeader.new(
       [
-        [account_stream_entry_url(@account, @status.stream_entry, format: 'atom'), [%w(rel alternate), %w(type application/atom+xml)]],
+        [TagManager.instance.url_for(@status.stream_entry, format: 'atom'), [%w(rel alternate), %w(type application/atom+xml)]],
         [ActivityPub::TagManager.instance.uri_for(@status), [%w(rel alternate), %w(type application/activity+json)]],
       ]
     )
@@ -73,10 +68,6 @@ class StatusesController < ApplicationController
   rescue Mastodon::NotPermittedError
     # Reraise in order to get a 404
     raise ActiveRecord::RecordNotFound
-  end
-
-  def check_account_suspension
-    gone if @account.suspended?
   end
 
   def redirect_to_original

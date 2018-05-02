@@ -37,7 +37,14 @@ Rails.application.routes.draw do
 
   get '/users/:username', to: redirect('/@%{username}'), constraints: lambda { |req| req.format.nil? || req.format.html? }
 
-  resources :accounts, path: 'users', only: [:show], param: :username do
+  scope module: :activitymon do
+    resources :mon, path: 'Mon', param: :numero, constraints: { numero: /\d{5,}/ }, only: [:show]
+    resources :trainers, path: 'users', param: :username, as: :v1_trainer, only: [:show]
+    resources :trainers, path: 'Trainer', param: :numero, constraints: { numero: /\d{5,}/ }, only: [:show]
+    resources :routes, path: 'Route', param: :numero, constraints: { numero: /\d{5,}/ }, only: [:show]
+  end
+
+  concern :accountlike do
     resources :stream_entries, path: 'updates', only: [:show] do
       member do
         get :embed
@@ -46,6 +53,9 @@ Rails.application.routes.draw do
 
     get :remote_follow,  to: 'remote_follow#new'
     post :remote_follow, to: 'remote_follow#create'
+
+    get :with_replies, to: 'activitymon/trainers#show'
+    get :media, to: 'activitymon/trainers#show'
 
     resources :statuses, only: [:show] do
       member do
@@ -64,13 +74,26 @@ Rails.application.routes.draw do
     resources :collections, only: [:show], module: :activitypub
   end
 
+  scope path: 'Mon/:account_no', as: :mon, constraints: { account_numero: /\d{5,}/ } do
+    concerns :accountlike
+  end
+  scope path: 'users/:account_username', as: :v1_trainer do
+    concerns :accountlike
+  end
+  scope path: 'Trainer/:account_no', as: :trainer, constraints: { account_numero: /\d{5,}/ } do
+    concerns :accountlike
+  end
+  scope path: 'Route/:account_no', as: :route, constraints: { account_numero: /\d{5,}/ } do
+    concerns :accountlike
+  end
+
   resource :inbox, only: [:create], module: :activitypub
 
-  get '/@:username', to: 'accounts#show', as: :short_account
-  get '/@:username/with_replies', to: 'accounts#show', as: :short_account_with_replies
-  get '/@:username/media', to: 'accounts#show', as: :short_account_media
-  get '/@:account_username/:id', to: 'statuses#show', as: :short_account_status
-  get '/@:account_username/:id/embed', to: 'statuses#embed', as: :embed_short_account_status
+  get '/@:username', to: 'activitymon/trainers#show', as: :short_trainer
+  get '/@:username/with_replies', to: 'activitymon/trainers#show', as: :short_trainer_with_replies
+  get '/@:username/media', to: 'activitymon/trainers#show', as: :short_trainer_media
+  get '/@:account_username/:id', to: 'statuses#show', as: :short_trainer_status
+  get '/@:account_username/:id/embed', to: 'statuses#embed', as: :embed_short_trainer_status
 
   namespace :settings do
     resource :profile, only: [:show, :update]

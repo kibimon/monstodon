@@ -12,21 +12,74 @@ module RoutingHelper
     end
   end
 
-
-  %w[
-    url status_url stream_entry_url following_index_url
-    activity:status_url
+  # Defines account_*_url methods as convenience so you don't have to
+  # always switch on type
+  %W[
+    :
+    stream_entry embed:stream_entry
+    remote_follow
+    with_replies media
+    status activity:status embed:status
+    followers following_index follow unfollow
+    outbox inbox collection
   ].each do |suffix|
-    if suffix.include? ":"
-      prefix, suffix = suffix.split ":"
-      name = "#{prefix}_activitymon_trainer_#{suffix}".to_sym
-      sym = "#{prefix}_account_#{suffix}".to_sym
+    if suffix.include? ':'
+      prefix, suffix = suffix.split ':'
     else
-      name = "activitymon_trainer_#{suffix}".to_sym
-      sym = "account_#{suffix}".to_sym
+      prefix = nil
     end
-    define_method name do |*args|
-      send sym, *args
+    name = "#{prefix}#{'_' unless prefix.nil?}account#{'_' unless suffix.nil?}#{suffix}_url"
+
+    define_method name do |account, *more|
+      case account.type
+      when 'ActivityMon::Mon'
+        root = 'mon'
+      when 'ActivityMon::Route'
+        root = 'route'
+      when 'ActivityMon::Trainer'
+        if account.routing_version == 1
+          root = 'v1_trainer'
+        else
+          root = 'trainer'
+        end
+      end
+
+      sym = "#{prefix}#{'_' unless prefix.nil?}#{root}#{'_' unless suffix.nil?}#{suffix}_url".to_sym
+
+      send sym, account, *more
+    end
+  end
+
+  # Defines short_account_*_url methods as convenience so you don't
+  # have to always switch on type. These are only different for
+  # Trainers.
+  %w[
+    : status with_replies media embed:status
+  ].each do |suffix|
+    if suffix.include? ':'
+      prefix, suffix = suffix.split ':'
+    else
+      prefix = nil
+    end
+    name = "#{prefix}#{'_' unless prefix.nil?}short_account#{'_' unless suffix.nil?}#{suffix}_url"
+
+    define_method name do |account, *more|
+      case account.type
+      when 'ActivityMon::Mon'
+        root = 'mon'
+      when 'ActivityMon::Route'
+        root = 'route'
+      when 'ActivityMon::Trainer'
+        root = 'short_trainer'
+      end
+
+      sym = "#{prefix}#{'_' unless prefix.nil?}#{root}#{'_' unless suffix.nil?}#{suffix}_url".to_sym
+
+      if account.type == 'ActivityMon::Trainer'
+        send sym, { username: account.username }, *more
+      else
+        send sym, account, *more
+      end
     end
   end
 

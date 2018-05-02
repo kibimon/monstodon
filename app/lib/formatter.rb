@@ -211,7 +211,7 @@ class Formatter
     username, domain = acct.split('@')
 
     domain  = nil if TagManager.instance.local_domain?(domain)
-    account = Account.find_remote(username, domain)
+    account = Account.find_by_username(username, domain)
 
     account ? mention_html(account) : "@#{acct}"
   end

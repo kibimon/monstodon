@@ -52,6 +52,7 @@
 #  route_regional_no       :integer          not null
 #  route_national_no       :integer          not null
 #  trainer_no              :integer          not null
+#  routing_version         :integer          default(2), not null
 #
 
 class Account < ApplicationRecord
@@ -260,10 +261,6 @@ class Account < ApplicationRecord
     :person
   end
 
-  def to_param
-    username
-  end
-
   def excluded_from_timeline_account_ids
     Rails.cache.fetch("exclude_account_ids_for:#{id}") { blocking.pluck(:target_account_id) + blocked_by.pluck(:account_id) + muting.pluck(:target_account_id) }
   end
@@ -427,6 +424,10 @@ class Account < ApplicationRecord
   before_validation :prepare_contents, if: :local?
 
   private
+
+  def new_or_remote?
+    new_record? || !local?
+  end
 
   def prepare_contents
     display_name&.strip!

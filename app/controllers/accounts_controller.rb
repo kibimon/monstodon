@@ -70,8 +70,20 @@ class AccountsController < ApplicationController
     Status.without_replies
   end
 
+  # The route gives us the means of accessing the account. Only routes
+  # which begin with one of the below strings point to accounts.
   def set_account
-    @account = Account.find_local!(params[:username])
+    if path.start_with?('/@') || path.start_with?('/users/')
+      @account = Account.find_by_username!(params[:username])
+    elsif path.start_with?('/Mon/')
+      @account = Account.find_no!(:mon_no, params[:numero])
+    elsif path.start_with?('/Route/')
+      @account = Account.find_no!(:route_regional_no, params[:numero])
+    elsif path.start_with?('/Trainer/')
+      @account = Account.find_no!(:trainer_no, params[:numero])
+    else
+      raise(ActiveRecord::RecordNotFound)
+    end
   end
 
   def older_url

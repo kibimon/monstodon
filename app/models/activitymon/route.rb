@@ -51,6 +51,7 @@
 #  route_regional_no       :integer          not null
 #  route_national_no       :integer          not null
 #  trainer_no              :integer          not null
+#  routing_version         :integer          default(2), not null
 #
 
 class ActivityMon::Route < Account
@@ -73,12 +74,21 @@ class ActivityMon::Route < Account
   end
 
   def username=(ignored)
+    return super(ignored) unless local?
     nil
   end
 
   def username
-    "Rt_#{route_national_no}N" unless regional?
-    "Rt_#{route_regional_no}"
+    return super unless local?
+    "Rt_#{route_regional_no.to_s.rjust(5, '0')}"
+  end
+
+  def object_type
+    :route
+  end
+
+  def to_param
+    route_regional_no.to_s.rjust(5, '0')
   end
 
   before_save :not_a_mon!
@@ -87,19 +97,11 @@ class ActivityMon::Route < Account
 
   private
 
-  def new_and_local?
-    new_record? && local?
-  end
-
-  def new_or_remote?
-    new_record? || !local?
-  end
-
   def is_a_route!
-    if !local?
-      route_regional_no = 0
-    else
+    if local?
       route_regional_no = nil if route_regional_no.nil?
+    else
+      route_regional_no = 0
     end
     route_national_no = nil if route_national_no.nil?
   end

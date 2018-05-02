@@ -13,7 +13,7 @@ class Api::V1::FollowsController < Api::BaseController
 
     if @account.nil?
       username, domain = target_uri.split('@')
-      @account         = Account.find_remote!(username, domain)
+      @account         = Account.find_by_username!(username, domain)
     end
 
     render json: @account, serializer: REST::AccountSerializer

@@ -51,6 +51,7 @@
 #  route_regional_no       :integer          not null
 #  route_national_no       :integer          not null
 #  trainer_no              :integer          not null
+#  routing_version         :integer          default(2), not null
 #
 
 class ActivityMon::Mon < Account
@@ -59,7 +60,7 @@ class ActivityMon::Mon < Account
 
   # Specific №s
   validates :mon_no, uniqueness: true, allow_nil: true
-  validates :mon_no, presence: true, unless: :new_record?
+  validates :mon_no, presence: true, unless: :new_or_remote?
   validates :route_regional_no, absence: true
   validates :route_national_no, absence: true
   validates :trainer_no, absence: true
@@ -81,11 +82,21 @@ class ActivityMon::Mon < Account
   end
 
   def username=(ignored)
+    return super(ignored) unless local?
     nil
   end
 
   def username
-    return "mon_#{mon_no}"
+    return super unless local?
+    "Mon_#{mon_no.to_s.rjust(5, '0')}"
+  end
+
+  def object_type
+    :mon
+  end
+
+  def to_param
+    mon_no.to_s.rjust(5, '0')
   end
 
   before_save :not_a_route!
@@ -95,6 +106,10 @@ class ActivityMon::Mon < Account
   private
 
   def is_a_mon!
-    self.mon_no = nil if mon_no.nil?
+    if local?
+      self.mon_no = nil if mon_no.nil?
+    else
+      self.mon_no = 0
+    end
   end
 end

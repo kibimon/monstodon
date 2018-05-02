@@ -13,7 +13,7 @@ class InstancePresenter
   )
 
   def contact_account
-    Account.find_local(Setting.site_contact_username)
+    Account.find_by_username(Setting.site_contact_username)
   end
 
   def user_count

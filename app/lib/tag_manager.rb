@@ -38,10 +38,66 @@ class TagManager
     return target.url if target.respond_to?(:local?) && !target.local?
 
     case target.object_type
-    when :person
+    when :mon, :route, :trainer
       short_account_url(target)
     when :note, :comment, :activity
-      short_account_status_url(target.account, target)
+      return account_stream_entry_url(target.account, target, *more) if target.respond_to?(:stream_entry?) && target.stream_entry?
+      return activity_account_status_url(target.account, target, *more) if target.reblog?
+      short_account_status_url(target.account, target, *more)
     end
+  end
+
+  def with_replies_url_for(target, *more)
+    raise ArgumentError, 'target must be a local actor' unless %i(mon route trainer).include?(target.object_type) && target.local?
+
+    short_account_with_replies_url(target, *more)
+  end
+
+  def media_url_for(target, *more)
+    raise ArgumentError, 'target must be a local actor' unless %i(mon route trainer).include?(target.object_type) && target.local?
+
+    short_account_media_url(target, *more)
+  end
+
+  def embed_url_for(target, *more)
+    raise ArgumentError, 'target must be a local activity' unless %i(note comment activity).include?(target.object_type) && target.local?
+
+    embed_short_account_status_url(target.account, target, *more)
+  end
+
+  def stream_entry_url_for(target, *more)
+    raise ArgumentError, 'target must be a local activity' unless %i(note comment activity).include?(target.object_type) && target.local?
+
+    account_stream_entry_url(target.account, target, *more)
+  end
+
+  def followers_url_for(target, *more)
+    raise ArgumentError, 'target must be a local actor' unless %i(mon route trainer).include?(target.object_type) && target.local?
+
+    account_followers_url(target, *more)
+  end
+
+  def following_url_for(target, *more)
+    raise ArgumentError, 'target must be a local actor' unless %i(mon route trainer).include?(target.object_type) && target.local?
+
+    account_following_url(target, *more)
+  end
+
+  def follow_url_for(target, *more)
+    raise ArgumentError, 'target must be a local actor' unless %i(mon route trainer).include?(target.object_type) && target.local?
+
+    account_follow_url(target, *more)
+  end
+
+  def unfollow_url_for(target, *more)
+    raise ArgumentError, 'target must be a local actor' unless %i(mon route trainer).include?(target.object_type) && target.local?
+
+    account_unfollow_url(target, *more)
+  end
+
+  def remote_follow_url_for(target, *more)
+    raise ArgumentError, 'target must be a local actor' unless %i(mon route trainer).include?(target.object_type) && target.local?
+
+    account_remote_follow_url(target, *more)
   end
 end

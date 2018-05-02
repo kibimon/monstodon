@@ -22,14 +22,14 @@ class HomeController < ApplicationController
         status = Status.find_by(id: matches[2])
 
         if status && (status.public_visibility? || status.unlisted_visibility?)
-          redirect_to(ActivityPub::TagManager.instance.url_for(status))
+          redirect_to(TagManager.instance.url_for(status))
           return
         end
       when 'accounts'
         account = Account.find_by(id: matches[2])
 
         if account
-          redirect_to(ActivityPub::TagManager.instance.url_for(account))
+          redirect_to(TagManager.instance.url_for(account))
           return
         end
       end
@@ -50,7 +50,7 @@ class HomeController < ApplicationController
       push_subscription: current_account.user.web_push_subscription(current_session),
       current_account: current_account,
       token: current_session.token,
-      admin: Account.find_local(Setting.site_contact_username),
+      admin: Account.find_by_username(Setting.site_contact_username),
     }
   end
 

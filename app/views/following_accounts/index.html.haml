@@ -3,7 +3,7 @@
 
 - content_for :header_tags do
   %meta{ name: 'robots', content: 'noindex' }/
-  = render 'accounts/og', account: @account, url: account_followers_url(@account, only_path: false)
+  = render 'accounts/og', account: @account, url: TagManager.instance.following_url_for(@account, only_path: false)
 
 = render 'accounts/header', account: @account
 
