@@ -54,9 +54,6 @@ Rails.application.routes.draw do
     get :remote_follow,  to: 'remote_follow#new'
     post :remote_follow, to: 'remote_follow#create'
 
-    get :with_replies, to: 'activitymon/trainers#show'
-    get :media, to: 'activitymon/trainers#show'
-
     resources :statuses, only: [:show] do
       member do
         get :activity
@@ -76,15 +73,23 @@ Rails.application.routes.draw do
 
   scope path: 'Mon/:account_no', as: :mon, constraints: { account_numero: /\d{5,}/ } do
     concerns :accountlike
+    get :with_replies, to: 'activitymon/mon#show'
+    get :media, to: 'activitymon/mon#show'
   end
   scope path: 'users/:account_username', as: :v1_trainer do
     concerns :accountlike
+    get :with_replies, to: 'activitymon/trainers#show'
+    get :media, to: 'activitymon/trainers#show'
   end
   scope path: 'Trainer/:account_no', as: :trainer, constraints: { account_numero: /\d{5,}/ } do
     concerns :accountlike
+    get :with_replies, to: 'activitymon/trainers#show'
+    get :media, to: 'activitymon/trainers#show'
   end
   scope path: 'Route/:account_no', as: :route, constraints: { account_numero: /\d{5,}/ } do
     concerns :accountlike
+    get :with_replies, to: 'activitymon/routes#show'
+    get :media, to: 'activitymon/routes#show'
   end
 
   resource :inbox, only: [:create], module: :activitypub

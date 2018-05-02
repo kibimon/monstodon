@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 class ActivityMon::MonController < AccountsController
-  def set_account
-    @account = Account.find_no!(:mon_no, params[:numero])
+  before_action :verify_type!
+
+  private
+
+  def verify_type!
+    raise(ActiveRecord::RecordNotFound) unless @account.mon?
   end
 end

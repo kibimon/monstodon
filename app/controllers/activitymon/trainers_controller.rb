@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 class ActivityMon::TrainersController < AccountsController
+  before_action :verify_type!
 
-  def set_account
-    if !params[:username].blank?
-      @account = Account.find_by_username!(params[:username])
-    else
-      @account = Account.find_no!(:trainer_no, params[:numero])
-    end
+  private
+
+  def verify_type!
+    raise(ActiveRecord::RecordNotFound) unless @account.trainer?
   end
 end

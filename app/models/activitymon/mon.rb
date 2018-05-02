@@ -60,7 +60,7 @@ class ActivityMon::Mon < Account
 
   # Specific №s
   validates :mon_no, uniqueness: true, allow_nil: true
-  validates :mon_no, presence: true, unless: :new_or_remote?
+  validates :mon_no, presence: true, if: :changed?, unless: :new_or_remote?
   validates :route_regional_no, absence: true
   validates :route_national_no, absence: true
   validates :trainer_no, absence: true

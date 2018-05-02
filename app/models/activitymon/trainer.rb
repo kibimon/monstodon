@@ -76,7 +76,7 @@ class ActivityMon::Trainer < Account
 
   # Specific №s
   validates :trainer_no, uniqueness: true, allow_nil: true
-  validates :trainer_no, presence: true, if: :changed?, unless: :new_record?
+  validates :trainer_no, presence: true, if: :changed?, unless: :new_or_remote?
   validates :mon_no, absence: true
   validates :route_regional_no, absence: true
   validates :route_national_no, absence: true

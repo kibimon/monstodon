@@ -5,6 +5,7 @@ class AccountsController < ApplicationController
 
   include AccountControllerConcern
 
+  before_action :require_account!
   before_action :set_cache_headers
 
   def show
@@ -119,5 +120,9 @@ class AccountsController < ApplicationController
     else
       filtered_statuses.paginate_by_max_id(PAGE_SIZE, params[:max_id], params[:since_id]).to_a
     end
+  end
+
+  def require_account!
+    raise(ActiveRecord::RecordNotFound) unless @account
   end
 end

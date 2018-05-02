@@ -32,7 +32,7 @@ module AccountControllerConcern
 
   def atom_account_url_link
     [
-      OStatus::TagManager.instance.uri_for(@account),
+      OStatus::TagManager.instance.uri_for(@account, format: 'atom'),
       [%w(rel alternate), %w(type application/atom+xml)],
     ]
   end

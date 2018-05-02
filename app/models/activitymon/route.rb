@@ -59,9 +59,9 @@ class ActivityMon::Route < Account
 
   # Specific №s
   validates :route_regional_no, uniqueness: true, allow_nil: true
-  validates :route_regional_no, presence: true, unless: :new_or_remote?
+  validates :route_regional_no, presence: true, if: :changed?, unless: :new_or_remote?
   validates :route_national_no, uniqueness: true, allow_nil: true
-  validates :route_national_no, presence: true, unless: :new_record?
+  validates :route_national_no, presence: true, if: :changed?, unless: :new_record?
   validates :mon_id, absence: true
   validates :trainer_id, absence: true
 
