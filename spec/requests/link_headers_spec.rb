@@ -7,7 +7,7 @@ describe 'Link headers' do
     let(:account) { Fabricate(:account, username: 'test') }
 
     before do
-      get short_account_path(username: account)
+      get short_trainer_path(username: account)
     end
 
     it 'contains webfinger url in link header' do

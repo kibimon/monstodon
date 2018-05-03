@@ -1,4 +1,2 @@
-Fabricator('ActivityMon::Species') do
-  name "MyString"
-  uri  "MyString"
+Fabricator('ActivityMon::Species', aliases: %i(species)) do
 end

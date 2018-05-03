@@ -1,4 +1,3 @@
-Fabricator('ActivityMon::Mon') do
-  owner_id   1
-  species_id 1
+Fabricator('ActivityMon::Mon', aliases: %i(mon v2_mon)) do
+  last_webfingered_at { Time.now.utc }
 end

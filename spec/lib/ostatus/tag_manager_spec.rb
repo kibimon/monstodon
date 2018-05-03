@@ -58,11 +58,11 @@ describe OStatus::TagManager do
       end
     end
 
-    context 'person object' do
+    context 'trainer object' do
       let(:target) { Fabricate(:account, username: 'alice') }
 
       it 'returns the URL for account' do
-        expect(target.object_type).to eq :person
+        expect(target.object_type).to eq :trainer
         is_expected.to eq 'https://cb6e6126.ngrok.io/users/alice'
       end
     end

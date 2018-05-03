@@ -26,7 +26,7 @@ describe AccountUnfollowController do
       subject
 
       expect(service).to have_received(:call).with(user.account, alice)
-      expect(response).to redirect_to(account_path(alice))
+      expect(response).to redirect_to(v1_trainer_path(alice))
     end
   end
 end
