@@ -33,25 +33,25 @@ describe AccountSearchService do
     describe 'searching local and remote users' do
       describe "when only '@'" do
         before do
-          allow(Account).to receive(:find_local)
+          allow(Account).to receive(:find_by_username)
           allow(Account).to receive(:search_for)
           subject.call('@', 10)
         end
 
         it 'uses find_local with empty query to look for local accounts' do
-          expect(Account).to have_received(:find_local).with('')
+          expect(Account).to have_received(:find_by_username).with('')
         end
       end
 
       describe 'when no domain' do
         before do
-          allow(Account).to receive(:find_local)
+          allow(Account).to receive(:find_by_username)
           allow(Account).to receive(:search_for)
           subject.call('one', 10)
         end
 
         it 'uses find_local to look for local accounts' do
-          expect(Account).to have_received(:find_local).with('one')
+          expect(Account).to have_received(:find_by_username).with('one')
         end
 
         it 'uses search_for to find matches' do
@@ -61,12 +61,12 @@ describe AccountSearchService do
 
       describe 'when there is a domain' do
         before do
-          allow(Account).to receive(:find_remote)
+          allow(Account).to receive(:find_by_username)
         end
 
         it 'uses find_remote to look for remote accounts' do
           subject.call('two@example.com', 10)
-          expect(Account).to have_received(:find_remote).with('two', 'example.com')
+          expect(Account).to have_received(:find_by_username).with('two', 'example.com')
         end
 
         describe 'and there is no account provided' do

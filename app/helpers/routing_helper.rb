@@ -83,6 +83,17 @@ module RoutingHelper
     end
   end
 
+  def short_account_path account, *more
+    case account.type
+    when 'ActivityMon::Mon'
+      short_mon_path account, *more
+    when 'ActivityMon::Route'
+      short_route_path account, *more
+    when 'ActivityMon::Trainer'
+      short_trainer_path account, *more
+    end
+  end
+
   def full_asset_url(source, **options)
     source = ActionController::Base.helpers.asset_url(source, options) unless use_storage?
 
