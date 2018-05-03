@@ -112,11 +112,31 @@ class ActivityPub::TagManager
     path_params[param]
   end
 
+  def uri_to_account(uri, klass)
+    path_params = Rails.application.routes.recognize_path(uri)
+    case path_params[:controller]
+    when 'activitymon/mon'
+      klass.find_no(:mon_no, path_params[:numero])
+    when 'activitymon/route'
+      klass.find_no(:route_regional_no, path_params[:numero])
+    when 'activitymon/trainer'
+      if path_params[:numero].present?
+        account = klass.find_no(:trainer_no, path_params[:numero])
+        return nil if account.routing_version == 1
+        account
+      else
+        account = klass.find_by_username(:trainer_no, path_params[:username])
+        return nil if account.routing_version != 1
+        account
+      end
+    end
+  end
+
   def uri_to_resource(uri, klass)
     if local_uri?(uri)
       case klass.name
       when 'Account'
-        klass.find_by_username(uri_to_local_id(uri, :username))
+        uri_to_account(uri, klass)
       else
         StatusFinder.new(uri).status
       end

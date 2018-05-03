@@ -15,18 +15,29 @@ module AccountAccessConcern
 
   private
 
-  # The route gives us the means of accessing the account. Only routes
-  # which begin with one of the below strings point to accounts.
+  def route_type
+    params[:account_type]
+  end
+
+  def username
+    params[:account_username]
+  end
+
+  def numero
+    params[:account_no]
+  end
+
+  # The route gives us the means of accessing the account.
   def set_account
-    if request.path.start_with?('/@') || request.path.start_with?('/users/')
-      @account = Account.find_by_username!(params[:account_username])
+    if %w(short_trainer v1_trainer).include? route_type
+      @account = Account.find_by_username!(username)
       raise(ActiveRecord::RecordNotFound) unless @account.trainer?
-    elsif request.path.start_with?('/Mon/')
-      @account = Account.find_no!(:mon_no, params[:account_no])
-    elsif request.path.start_with?('/Route/')
-      @account = Account.find_no!(:route_regional_no, params[:account_no])
-    elsif request.path.start_with?('/Trainer/')
-      @account = Account.find_no!(:trainer_no, params[:account_no])
+    elsif route_type == 'mon'
+      @account = Account.find_no!(:mon_no, numero)
+    elsif route_type == 'route'
+      @account = Account.find_no!(:route_regional_no, numero)
+    elsif route_type == 'trainer'
+      @account = Account.find_no!(:trainer_no, numero)
     else
       @account = nil
     end
@@ -47,9 +58,9 @@ module AccountAccessConcern
     return if @account.nil?
     case @account.routing_version
     when 1
-      raise(ActiveRecord::RecordNotFound) if request.path.start_with?('/Mon/', '/Route/', '/Trainer/')
+      raise(ActiveRecord::RecordNotFound) unless %w(v1_trainer short_trainer).include? route_type
     else
-      raise(ActiveRecord::RecordNotFound) if request.path.start_with?('/users/')
+      raise(ActiveRecord::RecordNotFound) if route_type == 'v1_trainer'
     end
   end
 end

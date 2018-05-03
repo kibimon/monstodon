@@ -102,9 +102,8 @@ class ActivityMon::Trainer < Account
     :trainer
   end
 
-  def to_param
-    return username if routing_version == 1
-    "#{trainer_no.to_s.rjust(5, '0')}"
+  def numero
+    trainer_no.to_s.rjust(5, '0')
   end
 
   before_save :not_a_mon!

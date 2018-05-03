@@ -38,10 +38,10 @@ Rails.application.routes.draw do
   get '/users/:username', to: redirect('/@%{username}'), constraints: lambda { |req| req.format.nil? || req.format.html? }
 
   scope module: :activitymon do
-    resources :mon, path: 'Mon', param: :numero, constraints: { numero: /\d{5,}/ }, only: [:show]
-    resources :trainers, path: 'users', param: :username, as: :v1_trainer, only: [:show]
-    resources :trainers, path: 'Trainer', param: :numero, constraints: { numero: /\d{5,}/ }, only: [:show]
-    resources :routes, path: 'Route', param: :numero, constraints: { numero: /\d{5,}/ }, only: [:show]
+    resources :mon, path: 'Mon', param: :numero, constraints: { numero: /\d{5,}/ }, only: [:show], defaults: { type: 'mon' }
+    resources :trainers, path: 'users', param: :username, as: :v1_trainer, only: [:show], defaults: { type: 'v1_trainer' }
+    resources :trainers, path: 'Trainer', param: :numero, constraints: { numero: /\d{5,}/ }, only: [:show], defaults: { type: 'trainer' }
+    resources :routes, path: 'Route', param: :numero, constraints: { numero: /\d{5,}/ }, only: [:show], defaults: { type: 'route' }
   end
 
   concern :accountlike do
@@ -71,34 +71,34 @@ Rails.application.routes.draw do
     resources :collections, only: [:show], module: :activitypub
   end
 
-  scope path: 'Mon/:account_no', as: :mon, constraints: { account_numero: /\d{5,}/ } do
+  scope path: 'Mon/:account_no', as: :mon, constraints: { account_numero: /\d{5,}/ }, defaults: { account_type: 'mon' } do
     concerns :accountlike
     get :with_replies, to: 'activitymon/mon#show'
     get :media, to: 'activitymon/mon#show'
   end
-  scope path: 'users/:account_username', as: :v1_trainer do
-    concerns :accountlike
-    get :with_replies, to: 'activitymon/trainers#show'
-    get :media, to: 'activitymon/trainers#show'
-  end
-  scope path: 'Trainer/:account_no', as: :trainer, constraints: { account_numero: /\d{5,}/ } do
-    concerns :accountlike
-    get :with_replies, to: 'activitymon/trainers#show'
-    get :media, to: 'activitymon/trainers#show'
-  end
-  scope path: 'Route/:account_no', as: :route, constraints: { account_numero: /\d{5,}/ } do
+  scope path: 'Route/:account_no', as: :route, constraints: { account_numero: /\d{5,}/ }, defaults: { account_type: 'route' } do
     concerns :accountlike
     get :with_replies, to: 'activitymon/routes#show'
     get :media, to: 'activitymon/routes#show'
   end
+  scope path: 'Trainer/:account_no', as: :trainer, constraints: { account_numero: /\d{5,}/ }, defaults: { account_type: 'trainer' } do
+    concerns :accountlike
+    get :with_replies, to: 'activitymon/trainers#show'
+    get :media, to: 'activitymon/trainers#show'
+  end
+  scope path: 'users/:account_username', as: :v1_trainer, defaults: { account_type: 'v1_trainer' } do
+    concerns :accountlike
+    get :with_replies, to: 'activitymon/trainers#show'
+    get :media, to: 'activitymon/trainers#show'
+  end
 
   resource :inbox, only: [:create], module: :activitypub
 
-  get '/@:username', to: 'activitymon/trainers#show', as: :short_trainer
-  get '/@:username/with_replies', to: 'activitymon/trainers#show', as: :short_trainer_with_replies
-  get '/@:username/media', to: 'activitymon/trainers#show', as: :short_trainer_media
-  get '/@:account_username/:id', to: 'statuses#show', as: :short_trainer_status
-  get '/@:account_username/:id/embed', to: 'statuses#embed', as: :embed_short_trainer_status
+  get '/@:username', to: 'activitymon/trainers#show', as: :short_trainer, defaults: { type: 'short_trainer' }
+  get '/@:username/with_replies', to: 'activitymon/trainers#show', as: :short_trainer_with_replies, defaults: { type: 'short_trainer' }
+  get '/@:username/media', to: 'activitymon/trainers#show', as: :short_trainer_media, defaults: { type: 'short_trainer' }
+  get '/@:account_username/:id', to: 'statuses#show', as: :short_trainer_status, defaults: { account_type: 'short_trainer' }
+  get '/@:account_username/:id/embed', to: 'statuses#embed', as: :embed_short_trainer_status, defaults: { account_type: 'short_trainer' }
 
   namespace :settings do
     resource :profile, only: [:show, :update]

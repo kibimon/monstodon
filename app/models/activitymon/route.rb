@@ -62,8 +62,8 @@ class ActivityMon::Route < Account
   validates :route_regional_no, presence: true, if: :changed?, unless: :new_or_remote?
   validates :route_national_no, uniqueness: true, allow_nil: true
   validates :route_national_no, presence: true, if: :changed?, unless: :new_record?
-  validates :mon_id, absence: true
-  validates :trainer_id, absence: true
+  validates :mon_no, absence: true
+  validates :trainer_no, absence: true
 
   def regional?
     local?
@@ -87,7 +87,7 @@ class ActivityMon::Route < Account
     :route
   end
 
-  def to_param
+  def numero
     route_regional_no.to_s.rjust(5, '0')
   end
 

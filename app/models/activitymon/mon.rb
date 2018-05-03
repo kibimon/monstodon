@@ -95,7 +95,7 @@ class ActivityMon::Mon < Account
     :mon
   end
 
-  def to_param
+  def numero
     mon_no.to_s.rjust(5, '0')
   end
 

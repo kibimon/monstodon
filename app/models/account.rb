@@ -165,8 +165,17 @@ class Account < ApplicationRecord
     local? ? username : "#{username}@#{domain}"
   end
 
+  def numero
+    id.to_s.rjust(5, '0')
+  end
+
   def local_username_and_domain
     "#{username}@#{Rails.configuration.x.local_domain}"
+  end
+
+  def to_param
+    return username if routing_version == 1
+    numero
   end
 
   def to_webfinger_s

@@ -34,16 +34,29 @@ class TagManager
     TagManager.instance.web_domain?(domain)
   end
 
-  def url_for(target)
+  def url_for(target, *more)
     return target.url if target.respond_to?(:local?) && !target.local?
 
     case target.object_type
     when :mon, :route, :trainer
-      short_account_url(target)
+      short_account_url(target, *more)
     when :note, :comment, :activity
       return account_stream_entry_url(target.account, target, *more) if target.respond_to?(:stream_entry?) && target.stream_entry?
       return activity_account_status_url(target.account, target, *more) if target.reblog?
       short_account_status_url(target.account, target, *more)
+    end
+  end
+
+  def full_url_for(target, *more)
+    return target.url if target.respond_to?(:local?) && !target.local?
+
+    case target.object_type
+    when :mon, :route, :trainer
+      account_url(target, *more)
+    when :note, :comment, :activity
+      return account_stream_entry_url(target.account, target, *more) if target.respond_to?(:stream_entry?) && target.stream_entry?
+      return activity_account_status_url(target.account, target, *more) if target.reblog?
+      account_status_url(target.account, target, *more)
     end
   end
 
