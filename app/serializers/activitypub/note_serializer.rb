@@ -41,7 +41,7 @@ class ActivityPub::NoteSerializer < ActiveModel::Serializer
   end
 
   def url
-    TagManager.instance.url_for(object)
+    ActivityPub::TagManager.instance.uri_for(object)
   end
 
   def attributed_to

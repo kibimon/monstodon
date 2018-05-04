@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ActivityPub::OutboxesController, type: :controller do
   let!(:account) { Fabricate(:account) }
+  let!(:trainer) { Fabricate(:trainer) }
 
   before do
     Fabricate(:status, account: account)
@@ -23,7 +24,7 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
 
   describe 'GET #show for routing version v2' do
     before do
-      get :show, params: { account_type: 'trainer', account_no: account.trainer_no }
+      get :show, params: { account_type: 'trainer', account_no: trainer.trainer_no }
     end
 
     it 'returns http success' do
