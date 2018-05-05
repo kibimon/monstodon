@@ -122,13 +122,13 @@ class ActivityPub::TagManager
       klass.find_no(:route_regional_no, path_params[:numero])
     when 'trainer'
       account = klass.find_no(:trainer_no, path_params[:numero])
-      return nil if account.routing_version == 1
+      return nil if account.nil? || account.routing_version == 1
       account
     when 'short_trainer'
       klass.find_by_username(path_params[:username])
     when 'v1_trainer'
       account = klass.find_by_username(path_params[:username])
-      return nil if account.routing_version != 1
+      return nil if account.nil? || account.routing_version != 1
       account
     end
   end
