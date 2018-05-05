@@ -31,12 +31,12 @@ module RoutingHelper
     name = "#{prefix}#{'_' unless prefix.nil?}account#{'_' unless suffix.nil?}#{suffix}_url"
 
     define_method name do |account, *more|
-      case account.type
-      when 'ActivityMon::Mon'
+      case account
+      when ActivityMon::Mon
         root = 'mon'
-      when 'ActivityMon::Route'
+      when ActivityMon::Route
         root = 'route'
-      when 'ActivityMon::Trainer'
+      when ActivityMon::Trainer
         if account.routing_version == 1
           root = 'v1_trainer'
         else
@@ -64,19 +64,19 @@ module RoutingHelper
     name = "#{prefix}#{'_' unless prefix.nil?}short_account#{'_' unless suffix.nil?}#{suffix}_url"
 
     define_method name do |account, *more|
-      case account.type
-      when 'ActivityMon::Mon'
+      case account
+      when ActivityMon::Mon
         root = 'mon'
-      when 'ActivityMon::Route'
+      when ActivityMon::Route
         root = 'route'
-      when 'ActivityMon::Trainer'
+      when ActivityMon::Trainer
         root = 'short_trainer'
       end
 
       sym = "#{prefix}#{'_' unless prefix.nil?}#{root}#{'_' unless suffix.nil?}#{suffix}_url".to_sym
 
-      if account.type == 'ActivityMon::Trainer'
-        send sym, { username: account.username }, *more
+      if account.trainer?
+        send sym, account.username, *more
       else
         send sym, account, *more
       end
@@ -84,12 +84,12 @@ module RoutingHelper
   end
 
   def short_account_path account, *more
-    case account.type
-    when 'ActivityMon::Mon'
+    case account
+    when ActivityMon::Mon
       short_mon_path account, *more
-    when 'ActivityMon::Route'
+    when ActivityMon::Route
       short_route_path account, *more
-    when 'ActivityMon::Trainer'
+    when ActivityMon::Trainer
       short_trainer_path account, *more
     end
   end
