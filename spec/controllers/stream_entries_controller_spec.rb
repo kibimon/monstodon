@@ -8,7 +8,7 @@ RSpec.describe StreamEntriesController, type: :controller do
       it 'assigns instance variables' do
         status = Fabricate(:status)
 
-        get route, params: { account_username: status.account.username, id: status.stream_entry.id }
+        get route, params: { account_type: 'v1_trainer', account_username: status.account.username, id: status.stream_entry.id }
 
         expect(assigns(:account)).to eq status.account
         expect(assigns(:stream_entry)).to eq status.stream_entry
@@ -19,7 +19,7 @@ RSpec.describe StreamEntriesController, type: :controller do
         alice = Fabricate(:account, username: 'alice')
         status = Fabricate(:status, account: alice)
 
-        get route, params: { account_username: alice.username, id: status.stream_entry.id }
+        get route, params: { account_type: 'v1_trainer', account_username: alice.username, id: status.stream_entry.id }
 
         expect(response.headers['Link'].to_s).to eq "<http://test.host/users/alice/updates/#{status.stream_entry.id}.atom>; rel=\"alternate\"; type=\"application/atom+xml\", <https://cb6e6126.ngrok.io/users/alice/statuses/#{status.id}>; rel=\"alternate\"; type=\"application/activity+json\""
       end
@@ -30,7 +30,7 @@ RSpec.describe StreamEntriesController, type: :controller do
         account = Fabricate(:account, suspended: true)
         status = Fabricate(:status, account: account)
 
-        get route, params: { account_username: account.username, id: status.stream_entry.id }
+        get route, params: { account_type: 'v1_trainer', account_username: account.username, id: status.stream_entry.id }
 
         expect(response).to have_http_status(410)
       end
@@ -42,7 +42,7 @@ RSpec.describe StreamEntriesController, type: :controller do
         stream_entry = Fabricate.build(:stream_entry, account: account, activity: nil, activity_type: 'Status')
         stream_entry.save!(validate: false)
 
-        get route, params: { account_username: account.username, id: stream_entry.id }
+        get route, params: { account_type: 'v1_trainer', account_username: account.username, id: stream_entry.id }
 
         expect(response).to have_http_status(404)
       end
@@ -56,7 +56,7 @@ RSpec.describe StreamEntriesController, type: :controller do
         status.stream_entry.update!(hidden: true)
 
         sign_in(user)
-        get route, params: { account_username: status.account.username, id: status.stream_entry.id }
+        get route, params: { account_type: 'v1_trainer', account_username: status.account.username, id: status.stream_entry.id }
 
         expect(response).to have_http_status(404)
       end
@@ -69,14 +69,14 @@ RSpec.describe StreamEntriesController, type: :controller do
     it 'redirects to status page' do
       status = Fabricate(:status)
 
-      get :show, params: { account_username: status.account.username, id: status.stream_entry.id }
+      get :show, params: { account_type: 'v1_trainer', account_username: status.account.username, id: status.stream_entry.id }
 
       expect(response).to redirect_to(short_account_status_url(status.account, status))
     end
 
     it 'returns http success with Atom' do
       status = Fabricate(:status)
-      get :show, params: { account_username: status.account.username, id: status.stream_entry.id }, format: 'atom'
+      get :show, params: { account_type: 'v1_trainer', account_username: status.account.username, id: status.stream_entry.id }, format: 'atom'
       expect(response).to have_http_status(:success)
     end
   end
@@ -87,7 +87,7 @@ RSpec.describe StreamEntriesController, type: :controller do
     it 'redirects to new embed page' do
       status = Fabricate(:status)
 
-      get :embed, params: { account_username: status.account.username, id: status.stream_entry.id }
+      get :embed, params: { account_type: 'v1_trainer', account_username: status.account.username, id: status.stream_entry.id }
 
       expect(response).to redirect_to(embed_short_account_status_url(status.account, status))
     end

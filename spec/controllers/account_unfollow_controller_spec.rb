@@ -9,7 +9,7 @@ describe AccountUnfollowController do
   describe 'POST #create' do
     let(:service) { double }
 
-    subject { post :create, params: { account_username: alice.username } }
+    subject { post :create, params: { account_type: 'v1_trainer', account_username: alice.username } }
 
     before do
       allow(UnfollowService).to receive(:new).and_return(service)

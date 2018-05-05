@@ -12,7 +12,7 @@ describe FollowerAccountsController do
       follow0 = follower0.follow!(alice)
       follow1 = follower1.follow!(alice)
 
-      get :index, params: { account_username: alice.username }
+      get :index, params: { account_type: 'v1_trainer', account_username: alice.username }
 
       assigned = assigns(:follows).to_a
       expect(assigned.size).to eq 2
