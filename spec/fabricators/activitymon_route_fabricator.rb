@@ -1,5 +1,7 @@
 Fabricator('ActivityMon::Route', aliases: %i(route v2_route)) do
   routing_version 2
   last_webfingered_at { Time.now.utc }
-  route_no { sequence(:route_no) }
+  route_regional_no { sequence(:route_regional_no) }
+  route_national_no { sequence(:route_national_no) }
+
 end
