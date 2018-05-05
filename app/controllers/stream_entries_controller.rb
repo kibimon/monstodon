@@ -28,7 +28,7 @@ class StreamEntriesController < ApplicationController
   end
 
   def embed
-    redirect_to TagManager.embed_url_for(@stream_entry.activity), status: 301
+    redirect_to TagManager.instance.embed_url_for(@stream_entry.activity), status: 301
   end
 
   private
