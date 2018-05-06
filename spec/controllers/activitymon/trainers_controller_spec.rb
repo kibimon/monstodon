@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe AccountsController, type: :controller do
+RSpec.describe ActivityMon::TrainersController, type: :controller do
   render_views
 
   let(:alice)  { Fabricate(:account, username: 'alice') }

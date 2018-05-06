@@ -20,7 +20,7 @@ describe 'Link headers' do
     it 'contains atom url in link header' do
       link_header = link_header_with_type('application/atom+xml')
 
-      expect(link_header.href).to eq 'http://www.example.com/users/test.atom'
+      expect(link_header.href).to eq 'https://cb6e6126.ngrok.io/users/test.atom'
       expect(link_header.attr_pairs.first).to eq %w(rel alternate)
     end
 
