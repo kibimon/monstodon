@@ -93,7 +93,7 @@ class TagManager
   def following_url_for(target, *more)
     raise ArgumentError, 'target must be a local actor' unless %i(mon route trainer).include?(target.object_type) && target.local?
 
-    account_following_url(target, *more)
+    account_following_index_url(target, *more)
   end
 
   def follow_url_for(target, *more)
