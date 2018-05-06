@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe StreamEntriesController, type: :controller do
+  include RoutingHelper
+
   render_views
 
   shared_examples 'before_action' do |route|

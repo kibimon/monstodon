@@ -4,6 +4,7 @@ class AccountsController < ApplicationController
   PAGE_SIZE = 20
 
   include AccountControllerConcern
+  include RoutingHelper
 
   before_action :require_account!
   before_action :set_cache_headers
