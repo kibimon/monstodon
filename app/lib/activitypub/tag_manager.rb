@@ -19,6 +19,7 @@ class ActivityPub::TagManager
     when :mon, :route, :trainer
       account_url(target, *more)
     when :note, :comment, :activity
+      return account_stream_entry_url(target.account, target, *more) if target.respond_to?(:stream_entry?) && target.stream_entry?
       return activity_account_status_url(target.account, target, *more) if target.reblog?
       account_status_url(target.account, target, *more)
     when :emoji
