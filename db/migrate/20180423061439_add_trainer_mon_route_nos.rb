@@ -8,9 +8,9 @@ class AddTrainerMonRouteNos < ActiveRecord::Migration[5.2]
     add_column :accounts, :trainer_no, :integer
 
     # Indexes nonzero columns
-    add_index :accounts, :mon_no, where: "mon_no <> 0", unique: true, algorithm: :concurrently
-    add_index :accounts, :route_no, where: "route_no <> 0", unique: true, algorithm: :concurrently
-    add_index :accounts, :trainer_no, where: "trainer_no <> 0", unique: true, algorithm: :concurrently
+    add_index :accounts, :mon_no, where: 'mon_no <> 0', unique: true, algorithm: :concurrently
+    add_index :accounts, :route_no, where: 'route_no <> 0', unique: true, algorithm: :concurrently
+    add_index :accounts, :trainer_no, where: 'trainer_no <> 0', unique: true, algorithm: :concurrently
 
     # Creates sequences and uses them as the defaults for the columns
     safety_assured {
@@ -28,10 +28,10 @@ class AddTrainerMonRouteNos < ActiveRecord::Migration[5.2]
     }
 
     # Backfills columns
-    Account.where(type: 'ActivityMon::Mon', domain: nil).in_batches.update_all(%q|mon_no = nextval('accounts_mon_no_seq'), route_no = 0, trainer_no = 0|)
-    Account.where(type: 'ActivityMon::Route', domain: nil).in_batches.update_all(%q|route_no = nextval('accounts_route_no_seq')|)
-    Account.where(type: 'ActivityMon::Trainer', domain: nil).in_batches.update_all(%q|mon_no = 0, route_no = 0, trainer_no = nextval('accounts_trainer_no_seq')|)
-    Account.where.not(type: %w(ActivityMon::Mon ActivityMon::Route ActivityMon::Trainer), domain: nil).in_batches.update_all(%q|mon_no = 0, route_regional_no = 0, route_national_no = 0, trainer_no = 0|)
+    Account.where(type: 'Monstodon::Mon', domain: nil).in_batches.update_all(%q|mon_no = nextval('accounts_mon_no_seq'), route_no = 0, trainer_no = 0|)
+    Account.where(type: 'Monstodon::Route', domain: nil).in_batches.update_all(%q|route_no = nextval('accounts_route_no_seq')|)
+    Account.where(type: 'Monstodon::Trainer', domain: nil).in_batches.update_all(%q|mon_no = 0, route_no = 0, trainer_no = nextval('accounts_trainer_no_seq')|)
+    Account.where.not(type: %w(Monstodon::Mon Monstodon::Route Monstodon::Trainer), domain: nil).in_batches.update_all(%q|mon_no = 0, route_no = 0, trainer_no = 0|)
 
     # Makes columns non-null
     change_column_null :accounts, :mon_no, false

@@ -25,18 +25,16 @@ SimpleNavigation::Configuration.run do |navigation|
     primary.item :moderation, safe_join([fa_icon('gavel fw'), t('moderation.title')]), admin_reports_url, if: proc { current_user.staff? } do |admin|
       admin.item :action_logs, safe_join([fa_icon('bars fw'), t('admin.action_logs.title')]), admin_action_logs_url
       admin.item :reports, safe_join([fa_icon('flag fw'), t('admin.reports.title')]), admin_reports_url, highlights_on: %r{/admin/reports}
-      admin.item :accounts, safe_join([fa_icon('users fw'), t('admin.accounts.title')]), admin_accounts_url do |accounts|
-        accounts.item :show_accounts, t('activitymon.admin.accounts.show'), admin_accounts_url, highlights_on: %r{/admin/accounts}
-        accounts.item :new_mon, t('activitymon.admin.mon.create'), new_admin_activitymon_mon_url, highlights_on: %r{/admin/activitymon/mon/new}
-      end
+      admin.item :accounts, safe_join([fa_icon('users fw'), t('admin.accounts.title')]), admin_accounts_url, highlights_on: %r{/admin/accounts}
       admin.item :invites, safe_join([fa_icon('user-plus fw'), t('admin.invites.title')]), admin_invites_path
       admin.item :instances, safe_join([fa_icon('cloud fw'), t('admin.instances.title')]), admin_instances_url, highlights_on: %r{/admin/instances}, if: -> { current_user.admin? }
       admin.item :domain_blocks, safe_join([fa_icon('lock fw'), t('admin.domain_blocks.title')]), admin_domain_blocks_url, highlights_on: %r{/admin/domain_blocks}, if: -> { current_user.admin? }
       admin.item :email_domain_blocks, safe_join([fa_icon('envelope fw'), t('admin.email_domain_blocks.title')]), admin_email_domain_blocks_url, highlights_on: %r{/admin/email_domain_blocks}, if: -> { current_user.admin? }
     end
 
-    primary.item :activitymon, t('activitymon.admin.section_title'), admin_activitymon_species_index_url, if: proc { current_user.staff? } do |activitymon|
-      activitymon.item :species, t('activitymon.admin.species.index'), admin_activitymon_species_index_url, highlights_on: %r{/admin/activitymon/species}
+    primary.item :monstodon, t('monstodon.admin.section_title'), admin_monstodon_species_index_url, if: proc { current_user.staff? } do |monstodon|
+      monstodon.item :species, t('monstodon.admin.species.index'), admin_monstodon_species_index_url, highlights_on: %r{/admin/monstodon/species}
+      monstodon.item :mon, t('monstodon.admin.mon.create'), new_admin_monstodon_mon_url, highlights_on: %r{/admin/monstodon/mon/new}
     end
 
     primary.item :admin, safe_join([fa_icon('cogs fw'), t('admin.title')]), proc { current_user.admin? ? edit_admin_settings_url : admin_custom_emojis_url }, if: proc { current_user.staff? } do |admin|

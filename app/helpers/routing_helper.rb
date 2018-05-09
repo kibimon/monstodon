@@ -14,7 +14,7 @@ module RoutingHelper
 
   # Defines account_*_url methods as convenience so you don't have to
   # always switch on type
-  %W[
+  %w[
     :
     stream_entry embed:stream_entry
     remote_follow
@@ -28,25 +28,30 @@ module RoutingHelper
     else
       prefix = nil
     end
-    name = "#{prefix}#{'_' unless prefix.nil?}account#{'_' unless suffix.nil?}#{suffix}_url"
 
-    define_method name do |account, *more|
-      case account
-      when ActivityMon::Mon
-        root = 'mon'
-      when ActivityMon::Route
-        root = 'route'
-      when ActivityMon::Trainer
-        if account.routing_version == 1
-          root = 'v1_trainer'
-        else
-          root = 'trainer'
+    %w[
+      url path
+    ].each do |url_type|
+      name = "#{prefix}#{'_' unless prefix.nil?}account#{'_' unless suffix.nil?}#{suffix}_#{url_type}"
+
+      define_method name do |account, *more|
+        case account
+        when Monstodon::Mon
+          root = 'mon'
+        when Monstodon::Route
+          root = 'route'
+        when Monstodon::Trainer
+          if account.routing_version == 1
+            root = 'v1_trainer'
+          else
+            root = 'trainer'
+          end
         end
+
+        sym = "#{prefix}#{'_' unless prefix.nil?}#{root}#{'_' unless suffix.nil?}#{suffix}_#{url_type}".to_sym
+
+        send sym, account, *more
       end
-
-      sym = "#{prefix}#{'_' unless prefix.nil?}#{root}#{'_' unless suffix.nil?}#{suffix}_url".to_sym
-
-      send sym, account, *more
     end
   end
 
@@ -61,36 +66,30 @@ module RoutingHelper
     else
       prefix = nil
     end
-    name = "#{prefix}#{'_' unless prefix.nil?}short_account#{'_' unless suffix.nil?}#{suffix}_url"
 
-    define_method name do |account, *more|
-      case account
-      when ActivityMon::Mon
-        root = 'mon'
-      when ActivityMon::Route
-        root = 'route'
-      when ActivityMon::Trainer
-        root = 'short_trainer'
+    %w[
+      url path
+    ].each do |url_type|
+      name = "#{prefix}#{'_' unless prefix.nil?}short_account#{'_' unless suffix.nil?}#{suffix}_#{url_type}"
+
+      define_method name do |account, *more|
+        case account
+        when Monstodon::Mon
+          root = 'mon'
+        when Monstodon::Route
+          root = 'route'
+        when Monstodon::Trainer
+          root = 'short_trainer'
+        end
+
+        sym = "#{prefix}#{'_' unless prefix.nil?}#{root}#{'_' unless suffix.nil?}#{suffix}_#{url_type}".to_sym
+
+        if account.trainer?
+          send sym, account.username, *more
+        else
+          send sym, account, *more
+        end
       end
-
-      sym = "#{prefix}#{'_' unless prefix.nil?}#{root}#{'_' unless suffix.nil?}#{suffix}_url".to_sym
-
-      if account.trainer?
-        send sym, account.username, *more
-      else
-        send sym, account, *more
-      end
-    end
-  end
-
-  def short_account_path account, *more
-    case account
-    when ActivityMon::Mon
-      short_mon_path account, *more
-    when ActivityMon::Route
-      short_route_path account, *more
-    when ActivityMon::Trainer
-      short_trainer_path account, *more
     end
   end
 

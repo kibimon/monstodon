@@ -45,9 +45,9 @@
 #  moved_to_account_id     :integer
 #  featured_collection_url :string
 #  fields                  :jsonb
+#  type                    :string           default("Monstodon::Trainer")
 #  owner_id                :integer
 #  species_id              :integer
-#  type                    :string           default("ActivityMon::Trainer")
 #  mon_no                  :integer          not null
 #  route_no                :integer          not null
 #  trainer_no              :integer          not null
@@ -119,10 +119,10 @@ class Account < ApplicationRecord
   scope :matches_display_name, ->(value) { where(arel_table[:display_name].matches("#{value}%")) }
   scope :matches_domain, ->(value) { where(arel_table[:domain].matches("%#{value}%")) }
 
-  # ActivityMon types
-  scope :mon_index, -> { where(type: 'ActivityMon::Mon') }
-  scope :routes, -> { where(type: 'ActivityMon::Route') }
-  scope :trainers, -> { where(type: 'ActivityMon::Trainer') }
+  # Monstodon types
+  scope :mon_index, -> { where(type: 'Monstodon::Mon') }
+  scope :routes, -> { where(type: 'Monstodon::Route') }
+  scope :trainers, -> { where(type: 'Monstodon::Trainer') }
 
   def mon_no
     nillify_if_zero super
@@ -315,19 +315,15 @@ class Account < ApplicationRecord
     end
 
     def mon(mon_no)
-      Account.where(mon_id: mon_no).first
+      find_no(:mon_no, mon_no)
     end
 
-    def regional(route_regional_no)
-      Account.where(route_regional_no: route_regional_no).first
-    end
-
-    def route(route_national_no)
-      Account.where(route_national_no: route_national_no).first
+    def route(route_no)
+      find_no(:route_no, route_no)
     end
 
     def trainer(trainer_no)
-      Account.where(trainer_no: trainer_no).first
+      find_no(:trainer_no, trainer_no)
     end
 
     def triadic_closures(account, limit: 5, offset: 0)

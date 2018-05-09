@@ -10,10 +10,10 @@ class WebfingerSerializer < ActiveModel::Serializer
   end
 
   def aliases
-    case object.type
-    when 'ActivityMon::Mon', 'ActivityMon::Route'
+    case object
+    when Monstodon::Mon, Monstodon::Route
       [account_url(object)]
-    when 'ActivityMon::Trainer'
+    when Monstodon::Trainer
       [short_account_url(object), account_url(object)]
     end
   end

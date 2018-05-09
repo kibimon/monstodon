@@ -23,41 +23,41 @@
       - if account.owned?
         .roles
           .account-role.owned
-            = t('activitymon.accounts.roles.owned')
+            = t('monstodon.accounts.roles.owned')
       - else
         .roles
           .account-role.mon
-            = t('activitymon.accounts.roles.mon')
+            = t('monstodon.accounts.roles.mon')
     - elsif account.route?
       .roles
         .account-role.route
-          = t('activitymon.accounts.roles.route')
+          = t('monstodon.accounts.roles.route')
 
     .bio
       .account__header__content.p-note.emojify= Formatter.instance.simplified_format(account, custom_emojify: true)
 
       %table.account__header__fields
-        %tbody.activitymon__fields
+        %tbody.monstodon__fields
           - if account.trainer? && account.local?
             %tr
-              %th= t('activitymon.trainer.trainer_no')
+              %th= t('monstodon.trainer.trainer_no')
               %td= account.trainer_no
           - elsif account.mon?
             - if account.owned?
               %tr
-                %th= t('activitymon.mon.owner_username')
+                %th= t('monstodon.mon.owner_username')
                 %td= link_to "@#{@account.owner_username}", TagManager.instance.url_for(@account.owner)
             - if account.national_no
               %tr
-                %th= t('activitymon.mon.national_no')
+                %th= t('monstodon.mon.national_no')
                 %td= account.national_no
             - if account.regional_no
               %tr
-                %th= t('activitymon.mon.regional_no')
+                %th= t('monstodon.mon.regional_no')
                 %td= account.regional_no
           - elsif account.route? && account.local?
             %tr
-              %th= t('activitymon.route.route_no')
+              %th= t('monstodon.route.route_no')
               %td= account.route_no
         %tbody
           - account.fields.each do |field|

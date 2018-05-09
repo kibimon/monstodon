@@ -19,7 +19,8 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'ActivityStreams'
   inflect.acronym 'JsonLd'
 
-  inflect.acronym 'ActivityMon'
+  inflect.acronym 'RPPub'
+  inflect.acronym 'MonStrPub'
   inflect.uncountable 'species'
   inflect.uncountable 'mon'
 end

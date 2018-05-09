@@ -58,7 +58,7 @@ class SearchService < BaseService
 
   def url_resource_symbol
     symbol = url_resource.class.name.downcase.pluralize.to_sym
-    symbol = :accounts if symbol == :"activitymon::trainers"
+    symbol = :accounts if symbol == :'monstodon::trainers'
     symbol
   end
 

@@ -115,7 +115,7 @@ class ActivityPub::TagManager
 
   def uri_to_account(uri, klass)
     path_params = Rails.application.routes.recognize_path(uri)
-    return nil unless %w(accounts activitymon/mon activitymon/routes activitymon/trainers).include? path_params[:controller]
+    return nil unless %w(accounts monstodon/mon monstodon/routes monstodon/trainers).include? path_params[:controller]
     case path_params[:type]
     when 'mon'
       klass.find_no(:mon_no, path_params[:numero])

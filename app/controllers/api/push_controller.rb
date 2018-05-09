@@ -58,7 +58,7 @@ class Api::PushController < Api::BaseController
   def account_feed_path?
     uri = Addressable::URI.parse(hub_topic)
     route = Rails.application.routes.recognize_path(uri.path)
-    %w(activitymon/trainers activitymon/routes activitymon/mon).include?(route[:controller]) &&
+    %w(monstodon/trainers monstodon/routes monstodon/mon).include?(route[:controller]) &&
       route[:action] == 'show' &&
       route[:format] == 'atom'
   end

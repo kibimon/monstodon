@@ -75,9 +75,9 @@ ActiveRecord::Schema.define(version: 2018_05_09_060208) do
     t.bigint "moved_to_account_id"
     t.string "featured_collection_url"
     t.jsonb "fields"
+    t.string "type", default: "Monstodon::Trainer"
     t.bigint "owner_id"
     t.bigint "species_id"
-    t.string "type", default: "ActivityMon::Trainer"
     t.serial "mon_no", null: false
     t.serial "route_no", null: false
     t.serial "trainer_no", null: false
@@ -93,20 +93,6 @@ ActiveRecord::Schema.define(version: 2018_05_09_060208) do
     t.index ["uri"], name: "index_accounts_on_uri"
     t.index ["url"], name: "index_accounts_on_url"
     t.index ["username", "domain"], name: "index_accounts_on_username_and_domain", unique: true
-  end
-
-  create_table "activitymon_species", force: :cascade do |t|
-    t.string "name", default: "", null: false
-    t.string "uri"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.serial "regional_no", null: false
-    t.serial "national_no", null: false
-    t.string "summary", default: "", null: false
-    t.string "content", default: "", null: false
-    t.index ["national_no"], name: "index_activitymon_species_on_national_no", unique: true, where: "(national_no <> 0)"
-    t.index ["regional_no"], name: "index_activitymon_species_on_regional_no", unique: true, where: "(regional_no <> 0)"
-    t.index ["uri"], name: "index_activitymon_species_on_uri", where: "(uri IS NOT NULL)"
   end
 
   create_table "admin_action_logs", force: :cascade do |t|
@@ -290,6 +276,20 @@ ActiveRecord::Schema.define(version: 2018_05_09_060208) do
     t.bigint "account_id"
     t.index ["account_id", "status_id"], name: "index_mentions_on_account_id_and_status_id", unique: true
     t.index ["status_id"], name: "index_mentions_on_status_id"
+  end
+
+  create_table "monstodon_species", force: :cascade do |t|
+    t.string "name", default: "", null: false
+    t.string "uri"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.serial "regional_no", null: false
+    t.serial "national_no", null: false
+    t.string "summary", default: "", null: false
+    t.string "content", default: "", null: false
+    t.index ["national_no"], name: "index_monstodon_species_on_national_no", unique: true, where: "(national_no <> 0)"
+    t.index ["regional_no"], name: "index_monstodon_species_on_regional_no", unique: true, where: "(regional_no <> 0)"
+    t.index ["uri"], name: "index_monstodon_species_on_uri", where: "(uri IS NOT NULL)"
   end
 
   create_table "mutes", force: :cascade do |t|
