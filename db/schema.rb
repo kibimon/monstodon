@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_24_040041) do
+ActiveRecord::Schema.define(version: 2018_05_09_060208) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,6 +82,7 @@ ActiveRecord::Schema.define(version: 2018_04_24_040041) do
     t.serial "route_no", null: false
     t.serial "trainer_no", null: false
     t.integer "routing_version", default: 2, null: false
+    t.string "description", default: "", null: false
     t.index "(((setweight(to_tsvector('simple'::regconfig, (display_name)::text), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, (username)::text), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(domain, ''::character varying))::text), 'C'::\"char\")))", name: "search_index", using: :gin
     t.index "lower((username)::text), lower((domain)::text)", name: "index_accounts_on_username_and_domain_lower"
     t.index ["mon_no"], name: "index_accounts_on_mon_no", unique: true, where: "(mon_no <> 0)"
@@ -95,12 +96,14 @@ ActiveRecord::Schema.define(version: 2018_04_24_040041) do
   end
 
   create_table "activitymon_species", force: :cascade do |t|
-    t.string "name"
+    t.string "name", default: "", null: false
     t.string "uri"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.serial "regional_no", null: false
     t.serial "national_no", null: false
+    t.string "summary", default: "", null: false
+    t.string "content", default: "", null: false
     t.index ["national_no"], name: "index_activitymon_species_on_national_no", unique: true, where: "(national_no <> 0)"
     t.index ["regional_no"], name: "index_activitymon_species_on_regional_no", unique: true, where: "(regional_no <> 0)"
     t.index ["uri"], name: "index_activitymon_species_on_uri", where: "(uri IS NOT NULL)"

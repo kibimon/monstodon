@@ -52,6 +52,7 @@
 #  route_no                :integer          not null
 #  trainer_no              :integer          not null
 #  routing_version         :integer          default(2), not null
+#  description             :string           default(""), not null
 #
 
 class Account < ApplicationRecord
@@ -133,6 +134,18 @@ class Account < ApplicationRecord
 
   def trainer_no
     nillify_if_zero super
+  end
+
+  def name
+    display_name
+  end
+
+  def summary
+    note
+  end
+
+  def content
+    description
   end
 
   def local?

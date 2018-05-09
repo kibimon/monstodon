@@ -51,6 +51,7 @@
 #  route_no                :integer          not null
 #  trainer_no              :integer          not null
 #  routing_version         :integer          default(2), not null
+#  description             :string           default(""), not null
 #
 
 class ActivityMon::Trainer < Account

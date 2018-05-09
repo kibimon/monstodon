@@ -3,12 +3,14 @@
 # Table name: activitymon_species
 #
 #  id          :integer          not null, primary key
-#  name        :string
+#  name        :string           default(""), not null
 #  uri         :string
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  regional_no :integer          not null
 #  national_no :integer          not null
+#  summary     :string           default(""), not null
+#  content     :string           default(""), not null
 #
 
 class ActivityMon::Species < ApplicationRecord

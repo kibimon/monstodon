@@ -51,6 +51,7 @@
 #  route_no                :integer          not null
 #  trainer_no              :integer          not null
 #  routing_version         :integer          default(2), not null
+#  description             :string           default(""), not null
 #
 
 class ActivityMon::Mon < Account
@@ -66,6 +67,9 @@ class ActivityMon::Mon < Account
   # Dex information
   delegate :regional_no,
     :national_no, to: :species, prefix: false, allow_nil: true
+  delegate :description,
+    :name,
+    :summary, to: :species, prefix: true, allow_nil: true
 
   # Trainer information
   delegate :username,
@@ -95,6 +99,18 @@ class ActivityMon::Mon < Account
 
   def numero
     mon_no.to_s.rjust(5, '0')
+  end
+
+  def name
+    return display_name.presence || species_name
+  end
+
+  def summary
+    return note.presence || species_summary
+  end
+
+  def content
+    return description.presence || species_content
   end
 
   before_save :not_a_route!

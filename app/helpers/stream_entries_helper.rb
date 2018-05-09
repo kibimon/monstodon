@@ -5,7 +5,7 @@ module StreamEntriesHelper
   EMBEDDED_ACTION = 'embed'
 
   def display_name(account)
-    account.display_name.presence || account.username
+    account.name.presence || account.username
   end
 
   def account_description(account)
@@ -26,7 +26,7 @@ module StreamEntriesHelper
       ].join(' '),
     ].join(', ')
 
-    [prepend_str, account.note].join(' · ')
+    [prepend_str, account.summary].join(' · ')
   end
 
   def media_summary(status)
