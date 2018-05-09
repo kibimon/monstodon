@@ -35,7 +35,7 @@ module AccountAccessConcern
     elsif route_type == 'mon'
       @account = Account.find_no!(:mon_no, numero)
     elsif route_type == 'route'
-      @account = Account.find_no!(:route_regional_no, numero)
+      @account = Account.find_no!(:route_no, numero)
     elsif route_type == 'trainer'
       @account = Account.find_no!(:trainer_no, numero)
     else

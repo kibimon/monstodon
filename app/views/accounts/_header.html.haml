@@ -38,7 +38,7 @@
 
       %table.account__header__fields
         %tbody.activitymon__fields
-          - if account.trainer?
+          - if account.trainer? && account.local?
             %tr
               %th= t('activitymon.trainer.trainer_no')
               %td= account.trainer_no
@@ -55,14 +55,10 @@
               %tr
                 %th= t('activitymon.mon.regional_no')
                 %td= account.regional_no
-          - elsif account.route?
-            - if account.regional?
-              %tr
-                %th= t('activitymon.route.route_regional_no')
-                %td= account.route_regional_no
+          - elsif account.route? && account.local?
             %tr
-              %th= t('activitymon.route.route_national_no')
-              %td= account.route_national_no
+              %th= t('activitymon.route.route_no')
+              %td= account.route_no
         %tbody
           - account.fields.each do |field|
             %tr

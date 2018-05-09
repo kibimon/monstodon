@@ -48,8 +48,7 @@
 #  species_id              :integer
 #  type                    :string           default("ActivityMon::Trainer")
 #  mon_no                  :integer          not null
-#  route_regional_no       :integer          not null
-#  route_national_no       :integer          not null
+#  route_no                :integer          not null
 #  trainer_no              :integer          not null
 #  routing_version         :integer          default(2), not null
 #
@@ -78,8 +77,7 @@ class ActivityMon::Trainer < Account
   validates :trainer_no, uniqueness: true, allow_nil: true
   validates :trainer_no, presence: true, if: :changed?, unless: :new_or_remote?
   validates :mon_no, absence: true
-  validates :route_regional_no, absence: true
-  validates :route_national_no, absence: true
+  validates :route_no, absence: true
 
   validates :username, presence: true
 

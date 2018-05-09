@@ -120,7 +120,7 @@ class ActivityPub::TagManager
     when 'mon'
       klass.find_no(:mon_no, path_params[:numero])
     when 'route'
-      klass.find_no(:route_regional_no, path_params[:numero])
+      klass.find_no(:route_no, path_params[:numero])
     when 'trainer'
       account = klass.find_no(:trainer_no, path_params[:numero])
       return nil if account.nil? || account.routing_version == 1

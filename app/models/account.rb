@@ -49,8 +49,7 @@
 #  species_id              :integer
 #  type                    :string           default("ActivityMon::Trainer")
 #  mon_no                  :integer          not null
-#  route_regional_no       :integer          not null
-#  route_national_no       :integer          not null
+#  route_no                :integer          not null
 #  trainer_no              :integer          not null
 #  routing_version         :integer          default(2), not null
 #
@@ -120,20 +119,15 @@ class Account < ApplicationRecord
   scope :matches_domain, ->(value) { where(arel_table[:domain].matches("%#{value}%")) }
 
   # ActivityMon types
-  scope :mon_index, -> { where.not(mon_no: nil) }
-  scope :regional_index, -> { where.not(route_regional_no: nil) }
-  scope :routes, -> { where.not(route_national_no: nil) }
-  scope :trainers, -> { where.not(trainer_no: nil) }
+  scope :mon_index, -> { where(type: 'ActivityMon::Mon') }
+  scope :routes, -> { where(type: 'ActivityMon::Route') }
+  scope :trainers, -> { where(type: 'ActivityMon::Trainer') }
 
   def mon_no
     nillify_if_zero super
   end
 
-  def route_regional_no
-    nillify_if_zero super
-  end
-
-  def route_national_no
+  def route_no
     nillify_if_zero super
   end
 
@@ -467,8 +461,7 @@ class Account < ApplicationRecord
   end
 
   def not_a_route!
-    self.route_regional_no = 0
-    self.route_national_no = 0
+    self.route_no = 0
   end
 
   def not_a_trainer!

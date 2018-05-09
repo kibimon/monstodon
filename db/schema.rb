@@ -79,16 +79,14 @@ ActiveRecord::Schema.define(version: 2018_04_24_040041) do
     t.bigint "species_id"
     t.string "type", default: "ActivityMon::Trainer"
     t.serial "mon_no", null: false
-    t.serial "route_regional_no", null: false
-    t.serial "route_national_no", null: false
+    t.serial "route_no", null: false
     t.serial "trainer_no", null: false
     t.integer "routing_version", default: 2, null: false
     t.index "(((setweight(to_tsvector('simple'::regconfig, (display_name)::text), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, (username)::text), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(domain, ''::character varying))::text), 'C'::\"char\")))", name: "search_index", using: :gin
     t.index "lower((username)::text), lower((domain)::text)", name: "index_accounts_on_username_and_domain_lower"
     t.index ["mon_no"], name: "index_accounts_on_mon_no", unique: true, where: "(mon_no <> 0)"
     t.index ["owner_id"], name: "index_accounts_on_owner_id"
-    t.index ["route_national_no"], name: "index_accounts_on_route_national_no", unique: true, where: "(route_national_no <> 0)"
-    t.index ["route_regional_no"], name: "index_accounts_on_route_regional_no", unique: true, where: "(route_regional_no <> 0)"
+    t.index ["route_no"], name: "index_accounts_on_route_no", unique: true, where: "(route_no <> 0)"
     t.index ["species_id"], name: "index_accounts_on_species_id"
     t.index ["trainer_no"], name: "index_accounts_on_trainer_no", unique: true, where: "(trainer_no <> 0)"
     t.index ["uri"], name: "index_accounts_on_uri"

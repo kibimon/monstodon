@@ -48,8 +48,7 @@
 #  species_id              :integer
 #  type                    :string           default("ActivityMon::Trainer")
 #  mon_no                  :integer          not null
-#  route_regional_no       :integer          not null
-#  route_national_no       :integer          not null
+#  route_no                :integer          not null
 #  trainer_no              :integer          not null
 #  routing_version         :integer          default(2), not null
 #
@@ -61,8 +60,7 @@ class ActivityMon::Mon < Account
   # Specific №s
   validates :mon_no, uniqueness: true, allow_nil: true
   validates :mon_no, presence: true, if: :changed?, unless: :new_or_remote?
-  validates :route_regional_no, absence: true
-  validates :route_national_no, absence: true
+  validates :route_no, absence: true
   validates :trainer_no, absence: true
 
   # Dex information

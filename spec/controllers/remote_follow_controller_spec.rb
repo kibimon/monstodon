@@ -75,7 +75,7 @@ describe RemoteFollowController do
 
     context 'with an invalid acct' do
       it 'renders new when acct is missing' do
-        post :create, params: { account_type: 'v1_trainer', account_type: 'v1_trainer', account_username: @account.username, remote_follow: { acct: '' } }
+        post :create, params: { account_type: 'v1_trainer', account_username: @account.username, remote_follow: { acct: '' } }
 
         expect(response).to render_template(:new)
       end
