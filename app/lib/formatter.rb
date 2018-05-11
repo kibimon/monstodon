@@ -52,12 +52,13 @@ class Formatter
   end
 
   def simplified_format(account, **options)
+    text = options[:allow_inheritance] ? account.summary : account.note
     html = if account.local?
-             linkify(account.summary)
+             linkify(text)
            else
-             reformat(account.summary)
+             reformat(text)
            end
-    html = encode_custom_emojis(html, CustomEmoji.from_text(account.summary, account.domain)) if options[:custom_emojify]
+    html = encode_custom_emojis(html, CustomEmoji.from_text(text, account.domain)) if options[:custom_emojify]
     html.html_safe # rubocop:disable Rails/OutputSafety
   end
 

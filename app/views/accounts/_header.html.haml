@@ -34,7 +34,7 @@
           = t('monstodon.accounts.roles.route')
 
     .bio
-      .account__header__content.p-note.emojify= Formatter.instance.simplified_format(account, custom_emojify: true)
+      .account__header__content.p-note.emojify= Formatter.instance.simplified_format(account, custom_emojify: true, allow_inheritance: true)
 
       %table.account__header__fields
         %tbody.monstodon__fields

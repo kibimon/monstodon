@@ -9,4 +9,4 @@
       %span.username
         @#{account.local? ? account.local_username_and_domain : account.acct}
         = fa_icon('lock') if account.locked?
-  .account__header__content.p-note.emojify= Formatter.instance.simplified_format(account)
+  .account__header__content.p-note.emojify= Formatter.instance.simplified_format(account, allow_inheritance: true)
