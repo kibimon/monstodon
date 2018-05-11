@@ -45,6 +45,6 @@ module AccountControllerConcern
   end
 
   def webfinger_account_url
-    webfinger_url(resource: @account.to_webfinger_s)
+    TagManager.instance.webfinger_url(resource: @account.to_webfinger_s)
   end
 end

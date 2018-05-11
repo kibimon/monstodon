@@ -4,7 +4,6 @@ class AccountsController < ApplicationController
   PAGE_SIZE = 20
 
   include AccountControllerConcern
-  include RoutingHelper
 
   before_action :require_account!
   before_action :set_cache_headers
@@ -95,11 +94,11 @@ class AccountsController < ApplicationController
 
   def pagination_url(max_id: nil, min_id: nil)
     if media_requested?
-      short_account_media_url(@account, max_id: max_id, min_id: min_id)
+      TagManager.instance.short_account_media_url(@account, max_id: max_id, min_id: min_id)
     elsif replies_requested?
-      short_account_with_replies_url(@account, max_id: max_id, min_id: min_id)
+      TagManager.instance.short_account_with_replies_url(@account, max_id: max_id, min_id: min_id)
     else
-      short_account_url(@account, max_id: max_id, min_id: min_id)
+      TagManager.instance.short_account_url(@account, max_id: max_id, min_id: min_id)
     end
   end
 

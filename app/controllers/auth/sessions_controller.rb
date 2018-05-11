@@ -2,8 +2,7 @@
 
 class Auth::SessionsController < Devise::SessionsController
   include Devise::Controllers::Rememberable
-  include RoutingHelper
-
+  
   layout 'auth'
 
   skip_before_action :require_no_authentication, only: [:create]
@@ -113,7 +112,7 @@ class Auth::SessionsController < Devise::SessionsController
   def home_paths(resource)
     paths = [about_path]
     if single_user_mode? && resource.is_a?(User)
-      paths << short_account_path(resource.account)
+      paths << TagManager.instance.short_account_path(resource.account)
     end
     paths
   end
