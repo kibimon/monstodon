@@ -24,6 +24,8 @@ class ActivityPub::TagManager
       account_status_url(target.account, target, *more)
     when :emoji
       emoji_url(target, *more)
+    when :species
+      species_url(target, *more)
     end
   end
 

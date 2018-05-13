@@ -22,6 +22,10 @@ class Monstodon::Species < ApplicationRecord
   validates :national_no, presence: true, unless: :new_or_remote?
   validates :uri, absence: true, if: :native?
 
+  def object_type
+    :species
+  end
+
   # The regional № can be nulled by the user (for now)
   def regional_no=(value)
     super 0 if value.nil?
