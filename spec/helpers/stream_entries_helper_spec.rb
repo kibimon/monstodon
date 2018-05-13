@@ -10,7 +10,6 @@ RSpec.describe StreamEntriesHelper, type: :helper do
 
     it 'uses the username when display name is nil' do
       account = Account.new(display_name: nil, username: "Username")
-
       expect(helper.display_name(account)).to eq "Username"
     end
   end

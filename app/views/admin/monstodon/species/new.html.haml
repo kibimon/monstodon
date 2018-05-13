@@ -1,0 +1,13 @@
+- content_for :page_title do
+  = t('monstodon.admin.species.create')
+
+= simple_form_for @species, url: { action: 'create' } do |f|
+  = render 'shared/error_messages', object: @species
+
+  .fields-group
+    = f.input :name, placeholder: t('monstodon.admin.species.name'), hint: t('monstodon.admin.species.name_hint')
+    = f.input :regional_no, placeholder: t('monstodon.admin.species.regional_no'), hint: t('monstodon.admin.species.regional_no_hint')
+    = f.input :national_no, placeholder: t('monstodon.admin.species.national_no'), hint: t('monstodon.admin.species.national_no_hint')
+
+  .actions
+    = f.button :button, t('monstodon.admin.species.create'), type: :submit

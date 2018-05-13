@@ -432,7 +432,7 @@ RSpec.describe OStatus::AtomSerializer do
 
         ProcessFeedService.new.call(xml, account)
 
-        expect(Status.find_by(uri: "https://remote/users/#{remote_status.account.to_param}/statuses/#{remote_status.id}")).to be_instance_of Status
+        expect(Status.find_by(uri: "https://remote/Trainer/#{remote_status.account.to_param}/statuses/#{remote_status.id}")).to be_instance_of Status
       end
     end
 

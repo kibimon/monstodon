@@ -4,24 +4,54 @@ module AccountFinderConcern
   extend ActiveSupport::Concern
 
   class_methods do
-    def find_local!(username)
-      find_local(username) || raise(ActiveRecord::RecordNotFound)
+    def find_no!(no_name, numero)
+      find_no(no_name, numero) || raise(ActiveRecord::RecordNotFound)
     end
 
-    def find_remote!(username, domain)
-      find_remote(username, domain) || raise(ActiveRecord::RecordNotFound)
+    def find_by_username!(username, domain = nil)
+      find_by_username(username, domain) || raise(ActiveRecord::RecordNotFound)
     end
 
-    def find_local(username)
-      find_remote(username, nil)
+    def find_no(no_name, numero)
+      AccountNoFinder.new(no_name, numero).account
     end
 
-    def find_remote(username, domain)
-      AccountFinder.new(username, domain).account
+    def find_by_username(username, domain = nil)
+      AccountByUsernameFinder.new(username, domain).account
     end
   end
 
-  class AccountFinder
+  class AccountNoFinder
+    attr_reader :no_name, :numero
+
+    def initialize(no_name, numero)
+      @no_name = no_name
+      @numero = numero
+    end
+
+    def account
+      scoped_accounts.order(id: :asc).take
+    end
+
+    private
+
+    def scoped_accounts
+      Account.unscoped.tap do |scope|
+        scope.merge! with_no
+        scope.merge! matching_no
+      end
+    end
+
+    def with_no
+      Account.where.not(no_name => 0)
+    end
+
+    def matching_no
+      Account.where(no_name => numero.to_i)
+    end
+  end
+
+  class AccountByUsernameFinder
     attr_reader :username, :domain
 
     def initialize(username, domain)

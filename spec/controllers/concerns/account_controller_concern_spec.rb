@@ -15,31 +15,11 @@ describe ApplicationController, type: :controller do
     routes.draw { get 'success' => 'anonymous#success' }
   end
 
-  context 'when account is suspended' do
-    it 'returns http gone' do
-      account = Fabricate(:account, suspended: true)
-      get 'success', params: { account_username: account.username }
-      expect(response).to have_http_status(410)
-    end
-  end
-
-  context 'when account is not suspended' do
-    it 'assigns @account' do
-      account = Fabricate(:account)
-      get 'success', params: { account_username: account.username }
-      expect(assigns(:account)).to eq account
-    end
-
+  context 'when routing is correct and account is not suspended or remote' do
     it 'sets link headers' do
-      account = Fabricate(:account, username: 'username')
-      get 'success', params: { account_username: 'username' }
-      expect(response.headers['Link'].to_s).to eq '<http://test.host/.well-known/webfinger?resource=acct%3Ausername%40cb6e6126.ngrok.io>; rel="lrdd"; type="application/xrd+xml", <http://test.host/users/username.atom>; rel="alternate"; type="application/atom+xml", <https://cb6e6126.ngrok.io/users/username>; rel="alternate"; type="application/activity+json"'
-    end
-
-    it 'returns http success' do
-      account = Fabricate(:account)
-      get 'success', params: { account_username: account.username }
-      expect(response).to have_http_status(:success)
+      account = Fabricate(:v1_trainer, username: 'username')
+      get 'success', params: { account_username: account.username, account_type: 'v1_trainer' }
+      expect(response.headers['Link'].to_s).to eq '<https://cb6e6126.ngrok.io/.well-known/webfinger?resource=acct%3Ausername%40cb6e6126.ngrok.io>; rel="lrdd"; type="application/xrd+xml", <https://cb6e6126.ngrok.io/users/username.atom>; rel="alternate"; type="application/atom+xml", <https://cb6e6126.ngrok.io/users/username>; rel="alternate"; type="application/activity+json"'
     end
   end
 end

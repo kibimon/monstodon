@@ -7,6 +7,6 @@ class AccountFollowController < ApplicationController
 
   def create
     FollowService.new.call(current_user.account, @account.acct)
-    redirect_to account_path(@account)
+    redirect_to TagManager.instance.full_url_for(@account)
   end
 end

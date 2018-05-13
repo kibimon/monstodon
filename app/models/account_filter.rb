@@ -47,6 +47,17 @@ class AccountFilter
       end
     when 'staff'
       accounts_with_users.merge User.staff
+    when 'type'
+      case value
+      when 'mon'
+        Account.mon_index
+      when 'route'
+        Account.routes
+      when 'trainer'
+        Account.trainers
+      else
+        raise "Unknown type: #{key}"
+      end
     else
       raise "Unknown filter: #{key}"
     end

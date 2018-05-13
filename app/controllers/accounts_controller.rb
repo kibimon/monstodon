@@ -5,6 +5,7 @@ class AccountsController < ApplicationController
 
   include AccountControllerConcern
 
+  before_action :require_account!
   before_action :set_cache_headers
 
   def show
@@ -70,8 +71,16 @@ class AccountsController < ApplicationController
     Status.without_replies
   end
 
-  def set_account
-    @account = Account.find_local!(params[:username])
+  def route_type
+    params[:type]
+  end
+
+  def username
+    params[:username]
+  end
+
+  def numero
+    params[:numero]
   end
 
   def older_url
@@ -85,11 +94,11 @@ class AccountsController < ApplicationController
 
   def pagination_url(max_id: nil, min_id: nil)
     if media_requested?
-      short_account_media_url(@account, max_id: max_id, min_id: min_id)
+      TagManager.instance.short_account_media_url(@account, max_id: max_id, min_id: min_id)
     elsif replies_requested?
-      short_account_with_replies_url(@account, max_id: max_id, min_id: min_id)
+      TagManager.instance.short_account_with_replies_url(@account, max_id: max_id, min_id: min_id)
     else
-      short_account_url(@account, max_id: max_id, min_id: min_id)
+      TagManager.instance.short_account_url(@account, max_id: max_id, min_id: min_id)
     end
   end
 
@@ -107,5 +116,9 @@ class AccountsController < ApplicationController
     else
       filtered_statuses.paginate_by_max_id(PAGE_SIZE, params[:max_id], params[:since_id]).to_a
     end
+  end
+
+  def require_account!
+    raise(ActiveRecord::RecordNotFound) unless @account
   end
 end

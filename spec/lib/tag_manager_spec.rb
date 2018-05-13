@@ -130,7 +130,7 @@ RSpec.describe TagManager do
 
       it 'returns the unique tag for status' do
         expect(target.object_type).to eq :activity
-        is_expected.to eq "https://cb6e6126.ngrok.io/@alice/#{target.id}"
+        is_expected.to eq "https://cb6e6126.ngrok.io/users/alice/updates/#{target.id}"
       end
     end
 
@@ -152,11 +152,11 @@ RSpec.describe TagManager do
       end
     end
 
-    context 'person object' do
+    context 'trainer object' do
       let(:target) { alice }
 
       it 'returns the URL for account' do
-        expect(target.object_type).to eq :person
+        expect(target.object_type).to eq :trainer
         is_expected.to eq 'https://cb6e6126.ngrok.io/@alice'
       end
     end

@@ -22,7 +22,7 @@ class RemoteUnfollowsController < ApplicationController
 
   def unfollow_attempt
     username, domain = acct_without_prefix.split('@')
-    UnfollowService.new.call(current_account, Account.find_remote!(username, domain))
+    UnfollowService.new.call(current_account, Account.find_by_username!(username, domain))
   end
 
   def acct_without_prefix

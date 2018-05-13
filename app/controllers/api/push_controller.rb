@@ -42,32 +42,24 @@ class Api::PushController < Api::BaseController
   end
 
   def account_from_topic
-    if hub_topic.present? && local_domain? && account_feed_path?
-      Account.find_local(hub_topic_params[:username])
+    if hub_topic.present? && local_uri? && account_feed_path?
+      ActivityPub::TagManager.instance.uri_to_account(hub_topic, Account)
     end
   end
 
-  def hub_topic_params
-    @_hub_topic_params ||= Rails.application.routes.recognize_path(hub_topic_uri.path)
-  end
-
-  def hub_topic_uri
-    @_hub_topic_uri ||= Addressable::URI.parse(hub_topic).normalize
-  end
-
-  def local_domain?
-    TagManager.instance.web_domain?(hub_topic_domain)
+  def local_uri?
+    ActivityPub::TagManager.instance.local_uri? hub_topic
   end
 
   def verified_domain
     return signed_request_account.domain if signed_request_account
   end
 
-  def hub_topic_domain
-    hub_topic_uri.host + (hub_topic_uri.port ? ":#{hub_topic_uri.port}" : '')
-  end
-
   def account_feed_path?
-    hub_topic_params[:controller] == 'accounts' && hub_topic_params[:action] == 'show' && hub_topic_params[:format] == 'atom'
+    uri = Addressable::URI.parse(hub_topic)
+    route = Rails.application.routes.recognize_path(uri.path)
+    %w(monstodon/trainers monstodon/routes monstodon/mon).include?(route[:controller]) &&
+      route[:action] == 'show' &&
+      route[:format] == 'atom'
   end
 end

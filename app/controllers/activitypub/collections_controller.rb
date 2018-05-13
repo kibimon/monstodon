@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class ActivityPub::CollectionsController < Api::BaseController
+  include AccountAccessConcern
   include SignatureVerification
 
-  before_action :set_account
   before_action :set_size
   before_action :set_statuses
 
@@ -16,10 +16,6 @@ class ActivityPub::CollectionsController < Api::BaseController
   end
 
   private
-
-  def set_account
-    @account = Account.find_local!(params[:account_username])
-  end
 
   def set_statuses
     @statuses = scope_for_collection.paginate_by_max_id(20, params[:max_id], params[:since_id])
@@ -48,7 +44,7 @@ class ActivityPub::CollectionsController < Api::BaseController
 
   def collection_presenter
     ActivityPub::CollectionPresenter.new(
-      id: account_collection_url(@account, params[:id]),
+      id: ActivityPub::TagManager.instance.collection_uri_for(@account, params[:id]),
       type: :ordered,
       size: @size,
       items: @statuses

@@ -12,7 +12,7 @@ class ProcessMentionsService < BaseService
 
     status.text = status.text.gsub(Account::MENTION_RE) do |match|
       username, domain  = $1.split('@')
-      mentioned_account = Account.find_remote(username, domain)
+      mentioned_account = Account.find_by_username(username, domain)
 
       if mention_undeliverable?(status, mentioned_account)
         begin

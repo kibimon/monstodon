@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe AccountsController, type: :controller do
+RSpec.describe Monstodon::TrainersController, type: :controller do
   render_views
 
   let(:alice)  { Fabricate(:account, username: 'alice') }
@@ -28,6 +28,7 @@ RSpec.describe AccountsController, type: :controller do
       before do
         sign_in(current_user) if defined? current_user
         get :show, params: {
+          type: 'v1_trainer',
           username: alice.username,
           max_id: (max_id if defined? max_id),
           since_id: (since_id if defined? since_id),

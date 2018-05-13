@@ -56,7 +56,7 @@ class User < ApplicationRecord
 
   devise :omniauthable
 
-  belongs_to :account, inverse_of: :user
+  belongs_to :account, class_name: 'Monstodon::Trainer', inverse_of: :user
   belongs_to :invite, counter_cache: :uses, optional: true
   accepts_nested_attributes_for :account
 

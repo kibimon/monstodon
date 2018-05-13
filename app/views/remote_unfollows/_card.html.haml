@@ -10,4 +10,4 @@
         %span @#{account.acct}
 
   - if account.note?
-    .account__header__content.emojify= Formatter.instance.simplified_format(account)
+    .account__header__content.emojify= Formatter.instance.simplified_format(account, allow_inheritance: true)

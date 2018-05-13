@@ -1,0 +1,18 @@
+- content_for :page_title do
+  = t('monstodon.admin.species.index')
+
+.table-wrapper
+  %table.table
+    %thead
+      %tr
+        %th= t('monstodon.admin.species.name')
+        %th= t('monstodon.admin.species.regional_no')
+        %th= t('monstodon.admin.species.national_no')
+        %th= t('monstodon.admin.species.uri')
+        %th
+        %th
+    %tbody
+      = render partial: 'species', collection: @species
+
+.actions
+  = link_to t('monstodon.admin.species.create'), new_admin_monstodon_species_path, class: 'button'

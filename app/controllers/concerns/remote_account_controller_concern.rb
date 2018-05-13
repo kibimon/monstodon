@@ -12,7 +12,7 @@ module RemoteAccountControllerConcern
   private
 
   def set_account
-    @account = Account.find_remote!(params[:acct])
+    @account = Account.find_by_username!(params[:acct])
   end
 
   def check_account_suspension

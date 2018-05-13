@@ -10,10 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_10_204633) do
+ActiveRecord::Schema.define(version: 2018_05_09_060208) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "account_domain_blocks", force: :cascade do |t|
@@ -76,8 +75,21 @@ ActiveRecord::Schema.define(version: 2018_04_10_204633) do
     t.bigint "moved_to_account_id"
     t.string "featured_collection_url"
     t.jsonb "fields"
+    t.string "type", default: "Monstodon::Trainer"
+    t.bigint "owner_id"
+    t.bigint "species_id"
+    t.serial "mon_no", null: false
+    t.serial "route_no", null: false
+    t.serial "trainer_no", null: false
+    t.integer "routing_version", default: 2, null: false
+    t.string "description", default: "", null: false
     t.index "(((setweight(to_tsvector('simple'::regconfig, (display_name)::text), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, (username)::text), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(domain, ''::character varying))::text), 'C'::\"char\")))", name: "search_index", using: :gin
     t.index "lower((username)::text), lower((domain)::text)", name: "index_accounts_on_username_and_domain_lower"
+    t.index ["mon_no"], name: "index_accounts_on_mon_no", unique: true, where: "(mon_no <> 0)"
+    t.index ["owner_id"], name: "index_accounts_on_owner_id"
+    t.index ["route_no"], name: "index_accounts_on_route_no", unique: true, where: "(route_no <> 0)"
+    t.index ["species_id"], name: "index_accounts_on_species_id"
+    t.index ["trainer_no"], name: "index_accounts_on_trainer_no", unique: true, where: "(trainer_no <> 0)"
     t.index ["uri"], name: "index_accounts_on_uri"
     t.index ["url"], name: "index_accounts_on_url"
     t.index ["username", "domain"], name: "index_accounts_on_username_and_domain", unique: true
@@ -264,6 +276,20 @@ ActiveRecord::Schema.define(version: 2018_04_10_204633) do
     t.bigint "account_id"
     t.index ["account_id", "status_id"], name: "index_mentions_on_account_id_and_status_id", unique: true
     t.index ["status_id"], name: "index_mentions_on_status_id"
+  end
+
+  create_table "monstodon_species", force: :cascade do |t|
+    t.string "name", default: "", null: false
+    t.string "uri"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.serial "regional_no", null: false
+    t.serial "national_no", null: false
+    t.string "summary", default: "", null: false
+    t.string "content", default: "", null: false
+    t.index ["national_no"], name: "index_monstodon_species_on_national_no", unique: true, where: "(national_no <> 0)"
+    t.index ["regional_no"], name: "index_monstodon_species_on_regional_no", unique: true, where: "(regional_no <> 0)"
+    t.index ["uri"], name: "index_monstodon_species_on_uri", where: "(uri IS NOT NULL)"
   end
 
   create_table "mutes", force: :cascade do |t|

@@ -29,7 +29,7 @@ class WebfingerResource
   end
 
   def account_show_page?
-    path_params[:controller] == 'accounts' && path_params[:action] == 'show'
+    %w(accounts monstodon/mon monstodon/routes monstodon/trainers).include?(path_params[:controller]) && path_params[:action] == 'show'
   end
 
   def path_params

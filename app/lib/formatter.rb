@@ -52,12 +52,13 @@ class Formatter
   end
 
   def simplified_format(account, **options)
+    text = options[:allow_inheritance] ? account.summary : account.note
     html = if account.local?
-             linkify(account.note)
+             linkify(text)
            else
-             reformat(account.note)
+             reformat(text)
            end
-    html = encode_custom_emojis(html, CustomEmoji.from_text(account.note, account.domain)) if options[:custom_emojify]
+    html = encode_custom_emojis(html, CustomEmoji.from_text(text, account.domain)) if options[:custom_emojify]
     html.html_safe # rubocop:disable Rails/OutputSafety
   end
 
@@ -211,7 +212,7 @@ class Formatter
     username, domain = acct.split('@')
 
     domain  = nil if TagManager.instance.local_domain?(domain)
-    account = Account.find_remote(username, domain)
+    account = Account.find_by_username(username, domain)
 
     account ? mention_html(account) : "@#{acct}"
   end

@@ -182,7 +182,7 @@ class OStatus::Activity::Creation < OStatus::Activity::Base
     url = Addressable::URI.parse(href).normalize
 
     if TagManager.instance.web_domain?(url.host)
-      Account.find_local(url.path.gsub('/users/', ''))
+      ActivityPub::TagManager.instance.uri_to_account(href, Account)
     else
       Account.where(uri: href).or(Account.where(url: href)).first || FetchRemoteAccountService.new.call(href)
     end

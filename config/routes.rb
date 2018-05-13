@@ -37,7 +37,14 @@ Rails.application.routes.draw do
 
   get '/users/:username', to: redirect('/@%{username}'), constraints: lambda { |req| req.format.nil? || req.format.html? }
 
-  resources :accounts, path: 'users', only: [:show], param: :username do
+  scope module: :monstodon do
+    resources :mon, path: 'Mon', param: :numero, constraints: { numero: /\d{5,}/ }, only: [:show], defaults: { type: 'mon' }
+    resources :trainers, path: 'users', param: :username, as: :v1_trainer, only: [:show], defaults: { type: 'v1_trainer' }
+    resources :trainers, path: 'Trainer', param: :numero, constraints: { numero: /\d{5,}/ }, only: [:show], defaults: { type: 'trainer' }
+    resources :routes, path: 'Route', param: :numero, constraints: { numero: /\d{5,}/ }, only: [:show], defaults: { type: 'route' }
+  end
+
+  concern :accountlike do
     resources :stream_entries, path: 'updates', only: [:show] do
       member do
         get :embed
@@ -64,13 +71,34 @@ Rails.application.routes.draw do
     resources :collections, only: [:show], module: :activitypub
   end
 
+  scope path: 'Mon/:account_no', as: :mon, constraints: { account_numero: /\d{5,}/ }, defaults: { account_type: 'mon' } do
+    concerns :accountlike
+    get :with_replies, to: 'monstodon/mon#show'
+    get :media, to: 'monstodon/mon#show'
+  end
+  scope path: 'Route/:account_no', as: :route, constraints: { account_numero: /\d{5,}/ }, defaults: { account_type: 'route' } do
+    concerns :accountlike
+    get :with_replies, to: 'monstodon/routes#show'
+    get :media, to: 'monstodon/routes#show'
+  end
+  scope path: 'Trainer/:account_no', as: :trainer, constraints: { account_numero: /\d{5,}/ }, defaults: { account_type: 'trainer' } do
+    concerns :accountlike
+    get :with_replies, to: 'monstodon/trainers#show'
+    get :media, to: 'monstodon/trainers#show'
+  end
+  scope path: 'users/:account_username', as: :v1_trainer, defaults: { account_type: 'v1_trainer' } do
+    concerns :accountlike
+    get :with_replies, to: 'monstodon/trainers#show'
+    get :media, to: 'monstodon/trainers#show'
+  end
+
   resource :inbox, only: [:create], module: :activitypub
 
-  get '/@:username', to: 'accounts#show', as: :short_account
-  get '/@:username/with_replies', to: 'accounts#show', as: :short_account_with_replies
-  get '/@:username/media', to: 'accounts#show', as: :short_account_media
-  get '/@:account_username/:id', to: 'statuses#show', as: :short_account_status
-  get '/@:account_username/:id/embed', to: 'statuses#embed', as: :embed_short_account_status
+  get '/@:username', to: 'monstodon/trainers#show', as: :short_trainer, defaults: { type: 'short_trainer' }
+  get '/@:username/with_replies', to: 'monstodon/trainers#show', as: :short_trainer_with_replies, defaults: { type: 'short_trainer' }
+  get '/@:username/media', to: 'monstodon/trainers#show', as: :short_trainer_media, defaults: { type: 'short_trainer' }
+  get '/@:account_username/:id', to: 'statuses#show', as: :short_trainer_status, defaults: { account_type: 'short_trainer' }
+  get '/@:account_username/:id/embed', to: 'statuses#embed', as: :embed_short_trainer_status, defaults: { account_type: 'short_trainer' }
 
   namespace :settings do
     resource :profile, only: [:show, :update]
@@ -119,6 +147,9 @@ Rails.application.routes.draw do
   resource :remote_unfollow, only: [:create]
   resource :authorize_follow, only: [:show, :create]
   resource :share, only: [:show, :create]
+
+  # Monstodon
+  resources :species, module: :monstodon, only: [:show], path: "Species", param: :national_no
 
   namespace :admin do
     resources :subscriptions, only: [:index]
@@ -179,6 +210,11 @@ Rails.application.routes.draw do
     end
 
     resources :account_moderation_notes, only: [:create, :destroy]
+
+    namespace :monstodon do
+      resources :species, only: [:index, :new, :create]
+      resources :mon, only: [:index, :new, :create]
+    end
   end
 
   authenticate :user, lambda { |u| u.admin? } do

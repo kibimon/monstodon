@@ -9,7 +9,7 @@ describe AccountFollowController do
   describe 'POST #create' do
     let(:service) { double }
 
-    subject { post :create, params: { account_username: alice.username } }
+    subject { post :create, params: { account_type: 'v1_trainer', account_username: alice.username } }
 
     before do
       allow(FollowService).to receive(:new).and_return(service)
@@ -26,7 +26,7 @@ describe AccountFollowController do
       subject
 
       expect(service).to have_received(:call).with(user.account, 'alice')
-      expect(response).to redirect_to(account_path(alice))
+      expect(response).to redirect_to(TagManager.instance.full_url_for(alice))
     end
   end
 end

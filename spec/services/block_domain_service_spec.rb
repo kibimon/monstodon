@@ -25,7 +25,7 @@ RSpec.describe BlockDomainService do
     end
 
     it 'removes remote accounts from that domain' do
-      expect(Account.find_remote('badguy666', 'evil.org').suspended?).to be true
+      expect(Account.find_by_username('badguy666', 'evil.org').suspended?).to be true
     end
 
     it 'removes the remote accounts\'s statuses and media attachments' do
@@ -45,7 +45,7 @@ RSpec.describe BlockDomainService do
     end
 
     it 'silences remote accounts from that domain' do
-      expect(Account.find_remote('badguy666', 'evil.org').silenced?).to be true
+      expect(Account.find_by_username('badguy666', 'evil.org').silenced?).to be true
     end
 
     it 'leaves the domains status and attachements, but clears media' do

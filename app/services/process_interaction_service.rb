@@ -54,7 +54,7 @@ class ProcessInteractionService < BaseService
   private
 
   def mentions_account?(xml, account)
-    xml.xpath('/xmlns:entry/xmlns:link[@rel="mentioned"]', xmlns: OStatus::TagManager::XMLNS).each { |mention_link| return true if [OStatus::TagManager.instance.uri_for(account), OStatus::TagManager.instance.url_for(account)].include?(mention_link.attribute('href').value) }
+    xml.xpath('/xmlns:entry/xmlns:link[@rel="mentioned"]', xmlns: OStatus::TagManager::XMLNS).each { |mention_link| return true if [OStatus::TagManager.instance.uri_for(account), OStatus::TagManager.instance.account_url(account)].include?(mention_link.attribute('href').value) }
     false
   end
 

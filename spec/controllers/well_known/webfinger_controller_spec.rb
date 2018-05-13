@@ -56,7 +56,7 @@ PEM
       expect(json[:aliases]).to include('https://cb6e6126.ngrok.io/@alice', 'https://cb6e6126.ngrok.io/users/alice')
     end
 
-    it 'returns JSON when account can be found' do
+    it 'returns XML when account can be found' do
       get :show, params: { resource: alice.to_webfinger_s }, format: :xml
 
       xml = Nokogiri::XML(response.body)

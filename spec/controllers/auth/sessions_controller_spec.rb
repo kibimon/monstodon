@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe Auth::SessionsController, type: :controller do
+  include RoutingHelper
+
   render_views
 
   describe 'GET #new' do
@@ -177,7 +179,7 @@ RSpec.describe Auth::SessionsController, type: :controller do
           let(:single_user_mode) { false }
 
           it "redirects back to the user's page" do
-            expect(response).to redirect_to(short_account_path(username: user.account))
+            expect(response).to redirect_to(short_account_path(user.account))
           end
         end
       end

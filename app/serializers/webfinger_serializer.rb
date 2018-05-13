@@ -10,7 +10,12 @@ class WebfingerSerializer < ActiveModel::Serializer
   end
 
   def aliases
-    [short_account_url(object), account_url(object)]
+    case object
+    when Monstodon::Mon, Monstodon::Route
+      [TagManager.instance.full_url_for(object)]
+    when Monstodon::Trainer
+      [TagManager.instance.url_for(object), TagManager.instance.full_url_for(object)]
+    end
   end
 
   def links

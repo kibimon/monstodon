@@ -83,6 +83,6 @@ describe 'stream_entries/show.html.haml', without_verify_partial_doubles: true d
     expect(header_tags).to match(%r{<meta content=".+" property="og:title" />})
     expect(header_tags).to match(%r{<meta content="article" property="og:type" />})
     expect(header_tags).to match(%r{<meta content=".+" property="og:image" />})
-    expect(header_tags).to match(%r{<meta content="http://.+" property="og:url" />})
+    expect(header_tags).to match(%r{<meta content="https?://.+" property="og:url" />})
   end
 end

@@ -32,6 +32,11 @@ SimpleNavigation::Configuration.run do |navigation|
       admin.item :email_domain_blocks, safe_join([fa_icon('envelope fw'), t('admin.email_domain_blocks.title')]), admin_email_domain_blocks_url, highlights_on: %r{/admin/email_domain_blocks}, if: -> { current_user.admin? }
     end
 
+    primary.item :monstodon, t('monstodon.admin.section_title'), admin_monstodon_species_index_url, if: proc { current_user.staff? } do |monstodon|
+      monstodon.item :species, t('monstodon.admin.species.index'), admin_monstodon_species_index_url, highlights_on: %r{/admin/monstodon/species}
+      monstodon.item :mon, t('monstodon.admin.mon.create'), new_admin_monstodon_mon_url, highlights_on: %r{/admin/monstodon/mon/new}
+    end
+
     primary.item :admin, safe_join([fa_icon('cogs fw'), t('admin.title')]), proc { current_user.admin? ? edit_admin_settings_url : admin_custom_emojis_url }, if: proc { current_user.staff? } do |admin|
       admin.item :settings, safe_join([fa_icon('cogs fw'), t('admin.settings.title')]), edit_admin_settings_url, if: -> { current_user.admin? }
       admin.item :custom_emojis, safe_join([fa_icon('smile-o fw'), t('admin.custom_emojis.title')]), admin_custom_emojis_url, highlights_on: %r{/admin/custom_emojis}

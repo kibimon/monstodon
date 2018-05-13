@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ActivityPub::ActorSerializer < ActiveModel::Serializer
-  include RoutingHelper
-
   attributes :id, :type, :following, :followers,
              :inbox, :outbox, :featured,
              :preferred_username, :name, :summary,
@@ -33,7 +31,7 @@ class ActivityPub::ActorSerializer < ActiveModel::Serializer
   delegate :moved?, to: :object
 
   def id
-    account_url(object)
+    ActivityPub::TagManager.instance.uri_for(object)
   end
 
   def type
@@ -41,23 +39,23 @@ class ActivityPub::ActorSerializer < ActiveModel::Serializer
   end
 
   def following
-    account_following_index_url(object)
+    ActivityPub::TagManager.instance.following_uri_for(object)
   end
 
   def followers
-    account_followers_url(object)
+    ActivityPub::TagManager.instance.followers_uri_for(object)
   end
 
   def inbox
-    account_inbox_url(object)
+    ActivityPub::TagManager.instance.inbox_uri_for(object)
   end
 
   def outbox
-    account_outbox_url(object)
+    ActivityPub::TagManager.instance.outbox_uri_for(object)
   end
 
   def featured
-    account_collection_url(object, :featured)
+    ActivityPub::TagManager.instance.collection_uri_for(object, :featured)
   end
 
   def endpoints
@@ -89,7 +87,7 @@ class ActivityPub::ActorSerializer < ActiveModel::Serializer
   end
 
   def url
-    short_account_url(object)
+    TagManager.instance.url_for(object)
   end
 
   def avatar_exists?

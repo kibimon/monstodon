@@ -10,26 +10,60 @@
         %span>< @#{account.local_username_and_domain}
         = fa_icon('lock') if account.locked?
 
-    - if Setting.show_staff_badge
+    - if Setting.show_staff_badge and account.trainer?
       - if account.user_admin?
         .roles
           .account-role.admin
-            = t 'accounts.roles.admin'
+            = t('accounts.roles.admin')
       - elsif account.user_moderator?
         .roles
           .account-role.moderator
-            = t 'accounts.roles.moderator'
+            = t('accounts.roles.moderator')
+    - elsif account.mon?
+      - if account.owned?
+        .roles
+          .account-role.owned
+            = t('monstodon.accounts.roles.owned')
+      - else
+        .roles
+          .account-role.mon
+            = t('monstodon.accounts.roles.mon')
+    - elsif account.route?
+      .roles
+        .account-role.route
+          = t('monstodon.accounts.roles.route')
 
     .bio
-      .account__header__content.p-note.emojify= Formatter.instance.simplified_format(account, custom_emojify: true)
+      .account__header__content.p-note.emojify= Formatter.instance.simplified_format(account, custom_emojify: true, allow_inheritance: true)
 
-      - unless account.fields.empty?
-        %table.account__header__fields
-          %tbody
-            - account.fields.each do |field|
+      %table.account__header__fields
+        %tbody.monstodon__fields
+          - if account.trainer? && account.local?
+            %tr
+              %th= t('monstodon.trainer.trainer_no')
+              %td= account.trainer_no
+          - elsif account.mon?
+            - if account.owned?
               %tr
-                %th.emojify= field.name
-                %td.emojify= Formatter.instance.format_field(account, field.value)
+                %th= t('monstodon.mon.owner_username')
+                %td= link_to "@#{@account.owner_username}", TagManager.instance.url_for(@account.owner)
+            - if account.national_no
+              %tr
+                %th= t('monstodon.mon.national_no')
+                %td= account.national_no
+            - if account.regional_no
+              %tr
+                %th= t('monstodon.mon.regional_no')
+                %td= account.regional_no
+          - elsif account.route? && account.local?
+            %tr
+              %th= t('monstodon.route.route_no')
+              %td= account.route_no
+        %tbody
+          - account.fields.each do |field|
+            %tr
+              %th.emojify= field.name
+              %td.emojify= Formatter.instance.format_field(account, field.value)
 
     .details-counters
       .counter{ class: active_nav_class(short_account_url(account)) }

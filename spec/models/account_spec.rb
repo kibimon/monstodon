@@ -223,9 +223,19 @@ RSpec.describe Account, type: :model do
   end
 
   describe '#object_type' do
-    it 'is always a person' do
+    it 'is a trainer for Trainers' do
       account = Fabricate(:account)
-      expect(account.object_type).to be :person
+      expect(account.object_type).to be :trainer
+    end
+
+    it 'is a mon for Mon' do
+      account = Fabricate(:mon)
+      expect(account.object_type).to be :mon
+    end
+
+    it 'is a route for Routes' do
+      account = Fabricate(:route)
+      expect(account.object_type).to be :route
     end
   end
 

@@ -8,7 +8,7 @@ describe StatusFinder do
   describe '#status' do
     context 'with a status url' do
       let(:status) { Fabricate(:status) }
-      let(:url) { short_account_status_url(account_username: status.account.username, id: status.id) }
+      let(:url) { short_account_status_url(status.account, status) }
       subject { described_class.new(url) }
 
       it 'finds the stream entry' do

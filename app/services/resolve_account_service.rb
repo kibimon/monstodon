@@ -15,9 +15,9 @@ class ResolveAccountService < BaseService
     @username, @domain = uri.split('@')
     @update_profile    = update_profile
 
-    return Account.find_local(@username) if TagManager.instance.local_domain?(@domain)
+    return Account.find_by_username(@username) if TagManager.instance.local_domain?(@domain)
 
-    @account = Account.find_remote(@username, @domain)
+    @account = Account.find_by_username(@username, @domain)
 
     return @account unless webfinger_update_due?
 
@@ -38,11 +38,11 @@ class ResolveAccountService < BaseService
     end
 
     return if links_missing?
-    return Account.find_local(@username) if TagManager.instance.local_domain?(@domain)
+    return Account.find_by_username(@username) if TagManager.instance.local_domain?(@domain)
 
     RedisLock.acquire(lock_options) do |lock|
       if lock.acquired?
-        @account = Account.find_remote(@username, @domain)
+        @account = Account.find_by_username(@username, @domain)
 
         if activitypub_ready? || @account&.activitypub?
           handle_activitypub

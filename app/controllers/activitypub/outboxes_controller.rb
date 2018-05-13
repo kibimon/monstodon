@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 class ActivityPub::OutboxesController < Api::BaseController
+  include AccountAccessConcern
   include SignatureVerification
-
-  before_action :set_account
 
   def show
     @statuses = @account.statuses.permitted_for(@account, signed_request_account).paginate_by_max_id(20, params[:max_id], params[:since_id])
@@ -14,13 +13,9 @@ class ActivityPub::OutboxesController < Api::BaseController
 
   private
 
-  def set_account
-    @account = Account.find_local!(params[:account_username])
-  end
-
   def outbox_presenter
     ActivityPub::CollectionPresenter.new(
-      id: account_outbox_url(@account),
+      id: ActivityPub::TagManager.instance.outbox_uri_for(@account),
       type: :ordered,
       size: @account.statuses_count,
       items: @statuses

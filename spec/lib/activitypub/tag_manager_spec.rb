@@ -5,13 +5,6 @@ RSpec.describe ActivityPub::TagManager do
 
   subject { described_class.instance }
 
-  describe '#url_for' do
-    it 'returns a string' do
-      account = Fabricate(:account)
-      expect(subject.url_for(account)).to be_a String
-    end
-  end
-
   describe '#uri_for' do
     it 'returns a string' do
       account = Fabricate(:account)

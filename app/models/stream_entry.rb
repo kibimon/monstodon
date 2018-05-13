@@ -39,6 +39,10 @@ class StreamEntry < ApplicationRecord
     orphaned? ? :delete : status.verb
   end
 
+  def stream_entry?
+    true
+  end
+
   def targeted?
     [:follow, :request_friend, :authorize, :reject, :unfollow, :block, :unblock, :share, :favorite].include? verb
   end

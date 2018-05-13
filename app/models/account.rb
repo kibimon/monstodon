@@ -45,6 +45,14 @@
 #  moved_to_account_id     :integer
 #  featured_collection_url :string
 #  fields                  :jsonb
+#  type                    :string           default("Monstodon::Trainer")
+#  owner_id                :integer
+#  species_id              :integer
+#  mon_no                  :integer          not null
+#  route_no                :integer          not null
+#  trainer_no              :integer          not null
+#  routing_version         :integer          default(2), not null
+#  description             :string           default(""), not null
 #
 
 class Account < ApplicationRecord
@@ -60,20 +68,7 @@ class Account < ApplicationRecord
 
   enum protocol: [:ostatus, :activitypub]
 
-  # Local users
   has_one :user, inverse_of: :account
-
-  validates :username, presence: true
-
-  # Remote user validations
-  validates :username, uniqueness: { scope: :domain, case_sensitive: true }, if: -> { !local? && will_save_change_to_username? }
-
-  # Local user validations
-  validates :username, format: { with: /\A[a-z0-9_]+\z/i }, length: { maximum: 30 }, if: -> { local? && will_save_change_to_username? }
-  validates_with UniqueUsernameValidator, if: -> { local? && will_save_change_to_username? }
-  validates_with UnreservedUsernameValidator, if: -> { local? && will_save_change_to_username? }
-  validates :display_name, length: { maximum: 30 }, if: -> { local? && will_save_change_to_display_name? }
-  validates :note, length: { maximum: 160 }, if: -> { local? && will_save_change_to_note? }
 
   # Timelines
   has_many :stream_entries, inverse_of: :account, dependent: :destroy
@@ -124,20 +119,34 @@ class Account < ApplicationRecord
   scope :matches_display_name, ->(value) { where(arel_table[:display_name].matches("#{value}%")) }
   scope :matches_domain, ->(value) { where(arel_table[:domain].matches("%#{value}%")) }
 
-  delegate :email,
-           :unconfirmed_email,
-           :current_sign_in_ip,
-           :current_sign_in_at,
-           :confirmed?,
-           :admin?,
-           :moderator?,
-           :staff?,
-           :locale,
-           to: :user,
-           prefix: true,
-           allow_nil: true
+  # Monstodon types
+  scope :mon_index, -> { where(type: 'Monstodon::Mon') }
+  scope :routes, -> { where(type: 'Monstodon::Route') }
+  scope :trainers, -> { where(type: 'Monstodon::Trainer') }
 
-  delegate :filtered_languages, to: :user, prefix: false, allow_nil: true
+  def mon_no
+    nillify_if_zero super
+  end
+
+  def route_no
+    nillify_if_zero super
+  end
+
+  def trainer_no
+    nillify_if_zero super
+  end
+
+  def name
+    display_name
+  end
+
+  def summary
+    note
+  end
+
+  def content
+    description
+  end
 
   def local?
     domain.nil?
@@ -147,12 +156,33 @@ class Account < ApplicationRecord
     moved_to_account_id.present?
   end
 
+  def mon?
+    false
+  end
+
+  def route?
+    false
+  end
+
+  def trainer?
+    false
+  end
+
   def acct
     local? ? username : "#{username}@#{domain}"
   end
 
+  def numero
+    id.to_s.rjust(5, '0')
+  end
+
   def local_username_and_domain
     "#{username}@#{Rails.configuration.x.local_domain}"
+  end
+
+  def to_param
+    return username if routing_version == 1
+    numero
   end
 
   def to_webfinger_s
@@ -247,10 +277,6 @@ class Account < ApplicationRecord
     :person
   end
 
-  def to_param
-    username
-  end
-
   def excluded_from_timeline_account_ids
     Rails.cache.fetch("exclude_account_ids_for:#{id}") { blocking.pluck(:target_account_id) + blocked_by.pluck(:account_id) + muting.pluck(:target_account_id) }
   end
@@ -286,6 +312,18 @@ class Account < ApplicationRecord
     def inboxes
       urls = reorder(nil).where(protocol: :activitypub).pluck(Arel.sql("distinct coalesce(nullif(accounts.shared_inbox_url, ''), accounts.inbox_url)"))
       DeliveryFailureTracker.filter(urls)
+    end
+
+    def mon(mon_no)
+      find_no(:mon_no, mon_no)
+    end
+
+    def route(route_no)
+      find_no(:route_no, route_no)
+    end
+
+    def trainer(trainer_no)
+      find_no(:trainer_no, trainer_no)
     end
 
     def triadic_closures(account, limit: 5, offset: 0)
@@ -399,6 +437,10 @@ class Account < ApplicationRecord
 
   private
 
+  def new_or_remote?
+    new_record? || !local?
+  end
+
   def prepare_contents
     display_name&.strip!
     note&.strip!
@@ -416,5 +458,22 @@ class Account < ApplicationRecord
     return if local?
 
     self.domain = TagManager.instance.normalize_domain(domain)
+  end
+
+  def nillify_if_zero(val)
+    return nil if val == 0
+    val
+  end
+
+  def not_a_mon!
+    self.mon_no = 0
+  end
+
+  def not_a_route!
+    self.route_no = 0
+  end
+
+  def not_a_trainer!
+    self.trainer_no = 0
   end
 end
