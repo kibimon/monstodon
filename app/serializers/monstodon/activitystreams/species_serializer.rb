@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MonStrPub::SpeciesSerializer < ActiveModel::Serializer
+class Monstodon::ActivityStreams::SpeciesSerializer < ActiveModel::Serializer
   include RoutingHelper
 
   attributes :id, :name, :type
