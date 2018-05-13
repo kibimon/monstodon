@@ -26,6 +26,11 @@ If you would like, you can [support the development of this project on Patreon][
  >  Monstodon is a very new project, currently under active development and not yet ready for deployment on production servers.
  >  Hang in there!
 
+The [master] branch will (soon) contain the latest stable version of the Monstodon code (currently Monstodon isn't really stable just yet). The [devon] branch is where you can find the most up-to-date in-development Monstodon code.
+
+[master]: https://github.com/kibimon/monstodon/tree/master
+[devon]: https://github.com/kibimon/monstodon/tree/devon
+
 ---
 
 ## Monstodon Resources
