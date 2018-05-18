@@ -2,6 +2,7 @@
 
 class ActivityPub::ActorSerializer < ActiveModel::Serializer
   include ActivityPub::ActivityStreams::ActorSerializerConcern
+  include MonStrPub::ActivityStreams::TrainerSerializerConcern
 
   class CustomEmojiSerializer < ActivityPub::EmojiSerializer
   end
