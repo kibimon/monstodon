@@ -56,3 +56,4 @@ en:
       regional_no: Regional №
     trainer:
       trainer_id: Trainer ID
+      mon_box_for: Mon owned by %{name}

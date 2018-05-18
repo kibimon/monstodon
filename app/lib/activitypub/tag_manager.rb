@@ -24,6 +24,8 @@ class ActivityPub::TagManager
       account_status_url(target.account, target, *more)
     when :emoji
       emoji_url(target, *more)
+    when :species
+      species_url(target, *more)
     end
   end
 
@@ -61,6 +63,12 @@ class ActivityPub::TagManager
     raise ArgumentError, 'target must be a local actor' unless %i(mon route trainer).include?(target.object_type) && target.local?
 
     account_following_index_url(target, *more)
+  end
+
+  def mon_uri_for(target, *more)
+    raise ArgumentError, 'target must be a local Trainer' unless target.object_type == :trainer && target.local?
+
+    trainer_mon_index_url(target, *more)
   end
 
   # Primary audience of a status

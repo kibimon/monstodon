@@ -85,6 +85,7 @@ Rails.application.routes.draw do
     concerns :accountlike
     get :with_replies, to: 'monstodon/trainers#show'
     get :media, to: 'monstodon/trainers#show'
+    resources :mon, only: [:index], module: :monstodon, controller: :mon_boxes
   end
   scope path: 'users/:account_username', as: :v1_trainer, defaults: { account_type: 'v1_trainer' } do
     concerns :accountlike

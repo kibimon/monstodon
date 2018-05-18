@@ -36,10 +36,16 @@ class AccountsController < ApplicationController
         skip_session!
 
         render_cached_json(['activitypub', 'actor', @account.cache_key], content_type: 'application/activity+json') do
-          ActiveModelSerializers::SerializableResource.new(@account, serializer: ActivityPub::ActorSerializer, adapter: ActivityPub::Adapter)
+          ActiveModelSerializers::SerializableResource.new(@account, serializer: serializer_class, adapter: MonStrPub::Adapter)
         end
       end
     end
+  end
+
+  protected
+
+  def serializer_class
+    ActivityPub::ActorSerializer
   end
 
   private

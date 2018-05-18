@@ -3,6 +3,12 @@
 class Monstodon::MonController < AccountsController
   before_action :verify_type!
 
+  protected
+
+  def serializer_class
+    Monstodon::ActivityStreams::MonSerializer
+  end
+
   private
 
   def verify_type!

@@ -5,6 +5,7 @@ module AccountControllerConcern
   include AccountAccessConcern
 
   FOLLOW_PER_PAGE = 12
+  MON_PER_PAGE = 10
 
   included do
     layout 'public'
