@@ -70,7 +70,7 @@ class Monstodon::Trainer < Account
   delegate :filtered_languages, to: :user, prefix: false, allow_nil: true
 
   # MonStrPub stuff
-  has_many :mon, class_name: 'Monstodon::Mon', inverse_of: :owner
+  has_many :mon, class_name: 'Monstodon::Mon', inverse_of: :owner, foreign_key: 'owner_id'
   validates :owner_id, :species_id, absence: true
 
   # Specific №s
