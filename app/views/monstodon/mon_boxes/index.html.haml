@@ -1,0 +1,11 @@
+- content_for :page_title do
+  = t('monstodon.trainers.mon_box_for', name: display_name(@account))
+  
+- content_for :header_tags do
+  %meta{ name: 'robots', content: 'noindex' }/
+  = render 'accounts/og', account: @account, url: TagManager.instance.followers_url_for(@account, only_path: false)
+  
+= render 'accounts/header', account: @account
+  
+= render 'accounts/follow_grid', follows: @mon, accounts: @mon
+  

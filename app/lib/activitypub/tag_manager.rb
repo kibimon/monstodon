@@ -65,6 +65,12 @@ class ActivityPub::TagManager
     account_following_index_url(target, *more)
   end
 
+  def mon_uri_for(target, *more)
+    raise ArgumentError, 'target must be a local Trainer' unless target.object_type == :trainer && target.local?
+
+    trainer_mon_index_url(target, *more)
+  end
+
   # Primary audience of a status
   # Public statuses go out to primarily the public collection
   # Unlisted and private statuses go out primarily to the followers collection

@@ -96,6 +96,12 @@ class TagManager
     account_following_index_url(target, *more)
   end
 
+  def mon_url_for(target, *more)
+    raise ArgumentError, 'target must be a local Trainer' unless target.object_type == :trainer && target.local?
+
+    trainer_mon_index_url(target, *more)
+  end
+
   def follow_url_for(target, *more)
     raise ArgumentError, 'target must be a local actor' unless %i(mon route trainer).include?(target.object_type) && target.local?
 
